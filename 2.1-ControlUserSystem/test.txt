@@ -1,0 +1,25 @@
+/*VALIDAS*/
+
+user admin AND resource = 'employees.json' OR resource = 'empleados.json'
+(user operator AND day = 'Sunday') OR (user admin AND day = 'Sunday')
+user guest AND day = 'Monday' AND hour = 12
+user admin AND (NOT hour = 20 OR NOT hour = 10) 
+(user admin OR user guest) AND resource = 'dashboard.html'
+user operator AND day = 'Tuesday' AND hour >= 14
+user guest AND day = 'Saturday' AND NOT day = 'Sunday' 
+user admin AND resource = 'settings.json' AND hour <= 20
+user operator AND day = 'Wednesday' AND resource = 'log.txt'
+user admin AND hour >= 8 AND hour <= 18
+
+/*NO VALIDAS*/
+
+admin user AND hour >= 9 		/*OrdenIncorrecto: user-role*/
+user manager AND hour < 10 		/*ROLInvalido: manager*/
+user guest AND resource == 'home.html' 	/*OperadorInvalido: ==*/
+user operator OR			/*ExpresionIncompleta: OR...*/
+user admin AND day = Monday		/*ValorInvalidoDAY: '...'*/
+user guest AND time >= 10		/*CondicionAccesoInvalida: time*/
+user AND day = 'Tuesday'		/*FaltaROL: user...*/
+user operator AND day + 'Wednesday'	/*OperadorInvalido: +*/
+user guest AND resource = config.xml	/*ValorInvalidoRESOURCE: ='...'*/
+user admin AND hour => 9		/*OperadorInvalido: =>*/
