@@ -1,0 +1,123 @@
+/! operaciones !/
+1 + 2;
+2 - 1;
+1 * 2;
+1 / 2;
+"f" + "k";
+1+3;
+6*23;
+5/2;
+41*21.7;
+
+/! variables !/
+declare @1;
+declare @alex;
+declare @nota_expo = 5.0;
+@1 = 21;
+declare @2 = "Adios";
+declare @1 = -4.7;
+declare @1 = 5.0;
+declare @1 = 6+9;
+declare @1 = 2/4;
+declare @1 = 4*5;
+@1 = -1.3;
+@1 = 1.3 + 31;
+@1 = "hola";
+@1 = fun0();
+
+
+/! condicionales simple !/
+
+/! if simple !/
+si(@1 eq @2){
+	fun0(@1, @2);
+};
+
+
+/! con else !/
+si(@3 noteq @2){ 
+	declare @3=41;
+} sino {
+	 declare @3=44;
+};
+
+
+/! con elseif !/
+si (no @1){
+	declare @1= 31;	
+} sino si (@2 noteq @4) {
+	 @3 = 9;
+};
+
+
+/! completo !/
+si(3<4 o @1 noteq @3){
+	@1 = "hola";
+} sino si (@1 eq @4){
+	declare @1= 5+2;
+} sino {
+	declare @1 =1 + 41;
+	@1= "hola";
+	@3=8;
+	3+1;
+};
+
+/! bucles !/
+
+/! condicional con bucle !/
+si(@1 > 6 y 1>8){
+	repetir(declare @1 ; @1<12 ; @1++){
+		2+3;
+	};
+};
+
+/! for!/
+
+repetir(declare @1 ; @1 < 12 ; @1 ++){
+	declare @1 = 31;
+};
+
+repetir(declare @1 ; @1 > 12 ; @1 ~~){
+	si (@1 eq @2){
+		1+3;
+		declare @1 = "hola";
+	};
+};
+
+repetir (declare @1 ; @1 > @2 ; @1 ++){
+	declare @1 = 31;
+	30/5;
+};
+
+/! funciones !/
+funcion fun1 (declare @1, declare @2){
+	@1 = 1 + 2; 
+	devolver @2;
+};
+
+funcion fun0 () {
+	declare @1= "hola";
+	devolver 1+1;
+};
+
+funcion fun2 (declare @111){
+	repetir(declare @1; @1 < 12 ; @1++){
+		declare @1;
+		@1 = 1;
+		
+	};
+	devolver @1;
+};
+
+fun0(@1);
+
+
+
+/! vectores !/
+vector @numeros[5];
+vector @datos = {1, 2, 3, 4, 5};
+@numeros[0] = 10;
+declare @suma;
+@suma = @datos[0] + @datos[1];
+
+

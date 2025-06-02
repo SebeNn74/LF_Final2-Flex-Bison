@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 7.1.--><structure>
+	<type>turing</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="q0">
+			<x>100.0</x>
+			<y>200.0</y>
+			<initial/>
+		</state>
+		<state id="1" name="q1">
+			<x>250.0</x>
+			<y>200.0</y>
+		</state>
+		<state id="2" name="q2">
+			<x>400.0</x>
+			<y>200.0</y>
+		</state>
+		<state id="3" name="q3">
+			<x>550.0</x>
+			<y>200.0</y>
+		</state>
+		<state id="4" name="q4">
+			<x>700.0</x>
+			<y>200.0</y>
+		</state>
+		<state id="5" name="accept">
+			<x>850.0</x>
+			<y>200.0</y>
+			<final/>
+		</state>
+		<state id="6" name="reject">
+			<x>400.0</x>
+			<y>50.0</y>
+		</state>
+		<!--The list of transitions.-->
+		
+		<!-- q0: Estado inicial - toma el primer 1 de la izquierda -->
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>1</read>
+			<write>X</write>
+			<move>R</move>
+		</transition>
+		<!-- Si encuentra # directamente, cadenas vacías - acepta -->
+		<transition>
+			<from>0</from>
+			<to>5</to>
+			<read>#</read>
+			<write>#</write>
+			<move>R</move>
+		</transition>
+		<!-- Si encuentra X, ya procesamos todo - verificar -->
+		<transition>
+			<from>0</from>
+			<to>4</to>
+			<read>X</read>
+			<write>X</write>
+			<move>R</move>
+		</transition>
+		
+		<!-- q1: Avanza hasta encontrar # -->
+		<transition>
+			<from>1</from>
+			<to>1</to>
+			<read>1</read>
+			<write>1</write>
+			<move>R</move>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>1</to>
+			<read>X</read>
+			<write>X</write>
+			<move>R</move>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<read>#</read>
+			<write>#</write>
+			<move>R</move>
+		</transition>
+		
+		<!-- q2: Avanza hasta el final de la segunda cadena -->
+		<transition>
+			<from>2</from>
+			<to>2</to>
+			<read>1</read>
+			<write>1</write>
+			<move>R</move>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>2</to>
+			<read>Y</read>
+			<write>Y</write>
+			<move>R</move>
+		</transition>
+		<!-- Al llegar al final, regresa para tomar el último 1 -->
+		<transition>
+			<from>2</from>
+			<to>3</to>
+			<read>!</read>
+			<write>!</write>
+			<move>L</move>
+		</transition>
+		
+		<!-- q3: Busca el último 1 disponible y lo marca -->
+		<transition>
+			<from>3</from>
+			<to>3</to>
+			<read>Y</read>
+			<write>Y</write>
+			<move>L</move>
+		</transition>
+		<!-- Encuentra el último 1 y lo marca -->
+		<transition>
+			<from>3</from>
+			<to>0</to>
+			<read>1</read>
+			<write>Y</write>
+			<move>L</move>
+		</transition>
+		<!-- Si no encuentra 1, rechaza -->
+		<transition>
+			<from>3</from>
+			<to>6</to>
+			<read>#</read>
+			<write>#</write>
+			<move>L</move>
+		</transition>
+		
+		<!-- q4: Verifica que después de # solo hay Y -->
+		<transition>
+			<from>4</from>
+			<to>4</to>
+			<read>X</read>
+			<write>X</write>
+			<move>R</move>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>4</to>
+			<read>#</read>
+			<write>#</write>
+			<move>R</move>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>4</to>
+			<read>Y</read>
+			<write>Y</write>
+			<move>R</move>
+		</transition>
+		<!-- Si llega al final sin encontrar 1, acepta -->
+		<transition>
+			<from>4</from>
+			<to>5</to>
+			<read>!</read>
+			<write>!</write>
+			<move>L</move>
+		</transition>
+		<!-- Si encuentra 1 sin marcar, rechaza -->
+		<transition>
+			<from>4</from>
+			<to>6</to>
+			<read>1</read>
+			<write>1</write>
+			<move>L</move>
+		</transition>
+		
+		<!-- Regreso desde q3 hasta el inicio -->
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>Y</read>
+			<write>Y</write>
+			<move>L</move>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>1</read>
+			<write>1</write>
+			<move>L</move>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>X</read>
+			<write>X</write>
+			<move>L</move>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>#</read>
+			<write>#</write>
+			<move>L</move>
+		</transition>
+		<!-- Cuando llega al inicio real -->
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>!</read>
+			<write>!</write>
+			<move>R</move>
+		</transition>
+		
+	</automaton>
+</structure>
