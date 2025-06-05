@@ -3,25 +3,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include "databaseSA.tab.h"
-// Variable global para pasar valores al parser
+
+/* Variable global para pasar valores al parser */
 extern YYSTYPE yylval;
 %}
 
 %option noyywrap
 
-// Definición de expresiones regulares
 DIGITO      [0-9]
 LETRA       [a-zA-Z_]
 ID          {LETRA}({LETRA}|{DIGITO})*
 ENTERO      {DIGITO}+
-CADENA      \"([^\\\"]|\\.)*\"              
+CADENA      \"([^\\\"]|\\.)*\"
 BOOLEAN     (verdadero|falso)
 SPACES      [ \t]+
-COMMENT     /\*([^*]|\*+[^*/])*\*+/         
+COMMENT     /\*([^*]|\*+[^*/])*\*+/
 
 %%
 
-// Palabras clave - tokens 
+/* Palabras clave tokens */
 "insertar"          { return INSERTAR; }
 "en"                { return EN; }
 "tabla"             { return TABLA; }
@@ -33,18 +33,20 @@ COMMENT     /\*([^*]|\*+[^*/])*\*+/
 "="                 { return IGUAL; }
 ","                 { return COMA; }
 
-// Tokens para bison
+/* Tokens para Bison */
 {ID}                { yylval.str = strdup(yytext); return ID; }
 {ENTERO}            { yylval.entero = atoi(yytext); return ENTERO; }
 {CADENA}            { yylval.str = strdup(yytext); return CADENA; }
 {BOOLEAN}           { yylval.booleano = strcmp(yytext, "verdadero") == 0; return BOOLEAN; }
 
-// salto de linea , es decir token EOL
+/* salto de linea, es decir token EOL */
 [\n]+               { return EOL; }
-// A Ignorar 
+
+/* A Ignorar */
 {SPACES}            { /* Ignorar espacios */ }
 {COMMENT}           { /* Ignorar comentarios */ }
-// Para errores 
-.                   { printf("Error léxico: '%c'\n", *yytext); }
+
+/* Para errores */
+.                   { printf("Error lexico: '%c'\n", *yytext); }
 
 %%
