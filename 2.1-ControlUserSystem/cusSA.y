@@ -20,10 +20,9 @@ int line_counter = 0;
 %left OR
 %left AND
 %right NOT
-%nonassoc GT LT MAY MIN EQU
+%nonassoc GT LT MAY MIN EQU /*Para evitar encadenar operadores*/
 
 %%
-
 input:
     | input line { 
         line_counter++;
