@@ -17,11 +17,11 @@ ENTERO      {DIGITO}+
 CADENA      \"([^\\\"]|\\.)*\"
 BOOLEAN     (verdadero|falso)
 SPACES      [ \t]+
-COMMENT     /\*([^*]|\*+[^*/])*\*+/
+COMMENT     \*([^*]|\*+[^*/])*\*+
+
 
 %%
 
-/* Palabras clave tokens */
 "insertar"          { return INSERTAR; }
 "en"                { return EN; }
 "tabla"             { return TABLA; }
@@ -33,20 +33,16 @@ COMMENT     /\*([^*]|\*+[^*/])*\*+/
 "="                 { return IGUAL; }
 ","                 { return COMA; }
 
-/* Tokens para Bison */
+{BOOLEAN}           { yylval.booleano = strcmp(yytext, "verdadero") == 0; return BOOLEAN; }
 {ID}                { yylval.str = strdup(yytext); return ID; }
 {ENTERO}            { yylval.entero = atoi(yytext); return ENTERO; }
 {CADENA}            { yylval.str = strdup(yytext); return CADENA; }
-{BOOLEAN}           { yylval.booleano = strcmp(yytext, "verdadero") == 0; return BOOLEAN; }
 
-/* salto de linea, es decir token EOL */
 [\n]+               { return EOL; }
 
-/* A Ignorar */
 {SPACES}            { /* Ignorar espacios */ }
 {COMMENT}           { /* Ignorar comentarios */ }
-
-/* Para errores */
+"//".*              { /* Ignorar comentarios de una línea */ }
+\/\*([^*]|\*[^/])*\*\/    { /* Ignorar comentarios tipo bloque */ }
 .                   { printf("Error lexico: '%c'\n", *yytext); }
-
 %%
