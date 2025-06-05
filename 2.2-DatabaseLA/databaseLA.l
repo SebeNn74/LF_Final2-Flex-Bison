@@ -1,17 +1,50 @@
 %{
-/*Sección de declaraciones*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "databaseSA.tab.h"
+// Variable global para pasar valores al parser
+extern YYSTYPE yylval;
 %}
 
-SPACES	    [ \t]+
-COMMENT	    "/*"[a-zA-Z0-9 :_<>=\'\.\-\*\+]+"*/"
+%option noyywrap
 
-/*Sección de reglas*/
+// Definición de expresiones regulares
+DIGITO      [0-9]
+LETRA       [a-zA-Z_]
+ID          {LETRA}({LETRA}|{DIGITO})*
+ENTERO      {DIGITO}+
+CADENA      \"([^\\\"]|\\.)*\"              
+BOOLEAN     (verdadero|falso)
+SPACES      [ \t]+
+COMMENT     /\*([^*]|\*+[^*/])*\*+/         
+
 %%
-{COMMENT}	{/*Ignora Comentario*/}
-[\n]+		{return EOL}
-{SPACES}	{/*Ignore*/}
-.               {printf("Error léxico: '%c'\n", *yytext); }
+
+// Palabras clave - tokens 
+"insertar"          { return INSERTAR; }
+"en"                { return EN; }
+"tabla"             { return TABLA; }
+"valores"           { return VALORES; }
+"fin"               { return FIN; }
+
+":"                 { return DOSPUNTOS; }
+";"                 { return PUNTOCOMA; }
+"="                 { return IGUAL; }
+","                 { return COMA; }
+
+// Tokens para bison
+{ID}                { yylval.str = strdup(yytext); return ID; }
+{ENTERO}            { yylval.entero = atoi(yytext); return ENTERO; }
+{CADENA}            { yylval.str = strdup(yytext); return CADENA; }
+{BOOLEAN}           { yylval.booleano = strcmp(yytext, "verdadero") == 0; return BOOLEAN; }
+
+// salto de linea , es decir token EOL
+[\n]+               { return EOL; }
+// A Ignorar 
+{SPACES}            { /* Ignorar espacios */ }
+{COMMENT}           { /* Ignorar comentarios */ }
+// Para errores 
+.                   { printf("Error léxico: '%c'\n", *yytext); }
+
 %%

@@ -2,36 +2,79 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern FILE *yyin; 
+// Archivo de entrada a leer
+extern FILE *yyin;
 
+// Se declara el analizador lexico yylex
 int yylex(void);
+
+// Función devolver Error de sintaxis
+void yyerror(const char *s);
+
+// Contador de líneas válidas procesadas
+int line_counter = 0;
+%}
+
+// Definición del tipo de datos para los valores de los tokens
+%union {
+    char* str;
+    int entero;
+    int booleano;
+}
+
+// Declaración de tokens con un tipo asociado
+%token <str> ID CADENA
+%token <entero> ENTERO
+%token <booleano> BOOLEAN
+
+// Declaración de tokens sin  tipo asociado
+
+%token INSERTAR EN TABLA VALORES FIN IGUAL COMA DOSPUNTOS PUNTOCOMA
+%token EOL
+
+%%
+
+// La Regla inicial, en la cual el programa puede tener múltiples líneas válidas o estar vacío
+input:
+//entrada vacia
+    | input consulta EOL {
+        line_counter++;
+        printf("Línea %d válida.\n", line_counter);
+    }
+;
+
+consulta:
+    INSERTAR EN TABLA ID VALORES DOSPUNTOS asignaciones FIN PUNTOCOMA
+;
+
+// Una lista de asignaciones que se separadan por comas
+asignaciones:
+    asignacion
+  | asignaciones COMA asignacion
+;
+
+// una asignacion es un id = valor
+asignacion:
+    ID IGUAL valor
+;
+
+// un valor puede ser cadena, entero o booleano
+valor:
+    CADENA
+  | ENTERO
+  | BOOLEAN
+;
+
+%%
+// Esta función muestra errores sintácticos desde Bison
 void yyerror(const char *s) {
     fprintf(stderr, "Error sintáctico: %s\n", s);
 }
 
-int line_counter = 0;
-%}
-
-%token EOL;
-
-%%
-
-input:
-    | input line { 
-        line_counter++;
-        printf("Linea %d sintácticamente válida.\n", line_counter); }
-    ;
-
-line: 
-    EOL  { printf("\n"); }
-    ;
-
-%%
-
-/*Sección de funciones del usuario*/
+// Función principal: abre archivo o lee de stdin y ejecuta el parser
 int main(int argc, char **argv) {
     if (argc > 1) {
-        yyin = fopen(argv[1], "r");
+        yyin = fopen(argv[1], "r");  // Abrir archivo pasado como argumento
         if (!yyin) {
             fprintf(stderr, "No se pudo abrir el archivo: %s\n", argv[1]);
             return 1;
@@ -40,8 +83,8 @@ int main(int argc, char **argv) {
         yyin = stdin;
         printf("Ingrese el texto para analizar (Ctrl+D para terminar):\n");
     }
-    
-    yyparse();
+
+    yyparse(); // Se ejecuta el parser generado 
 
     if (yyin != stdin) {
         fclose(yyin);
