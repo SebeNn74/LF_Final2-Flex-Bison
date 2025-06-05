@@ -66,8 +66,7 @@ extern int yydebug;
     IGUAL = 267,                   /* IGUAL  */
     COMA = 268,                    /* COMA  */
     DOSPUNTOS = 269,               /* DOSPUNTOS  */
-    PUNTOCOMA = 270,               /* PUNTOCOMA  */
-    EOL = 271                      /* EOL  */
+    PUNTOCOMA = 270                /* PUNTOCOMA  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -76,13 +75,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "databaseSA.y"
+#line 48 "databaseSA.y"
 
     char* str;
     int entero;
     int booleano;
 
-#line 86 "databaseSA.tab.h"
+#line 85 "databaseSA.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

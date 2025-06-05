@@ -1,26 +1,23 @@
 /*VALIDAS*/
-
 insertar en tabla usuarios valores:
 nombre = "Sebastian", edad = 30, activo = verdadero
 fin;
 
-
 insertar en tabla productos valores:
-nombre = "Café", precio = 1500, disponible = falso
+nombre = "Cafe", precio = 1500, disponible = falso
 fin;
 
 insertar en tabla usuarios valores:
 nombre = "Danna", edad = 18, activo = falso
+fin;
 
 /*NO VALIDAS*/
 
 /* Sin `fin;` */
-
 insertar en tabla usuarios valores:
 nombre = "Ana", edad = 30
 
-/* Sin `:`  en valores */
-
+/* Sin `:` en valores */
 insertar en tabla usuarios valores
 nombre = "Jose", edad = 22, activo = verdadero
 fin;

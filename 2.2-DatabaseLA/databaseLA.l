@@ -17,8 +17,7 @@ ENTERO      {DIGITO}+
 CADENA      \"([^\\\"]|\\.)*\"
 BOOLEAN     (verdadero|falso)
 SPACES      [ \t]+
-COMMENT     \*([^*]|\*+[^*/])*\*+
-
+COMMENT     \/\*([^*]|\*+[^*/])*\*+\/
 
 %%
 
@@ -33,16 +32,52 @@ COMMENT     \*([^*]|\*+[^*/])*\*+
 "="                 { return IGUAL; }
 ","                 { return COMA; }
 
-{BOOLEAN}           { yylval.booleano = strcmp(yytext, "verdadero") == 0; return BOOLEAN; }
-{ID}                { yylval.str = strdup(yytext); return ID; }
-{ENTERO}            { yylval.entero = atoi(yytext); return ENTERO; }
-{CADENA}            { yylval.str = strdup(yytext); return CADENA; }
+{BOOLEAN}           { 
+                      yylval.booleano = (strcmp(yytext, "verdadero") == 0) ? 1 : 0; 
+                      return BOOLEAN; 
+                    }
 
-[\n]+               { return EOL; }
+{ID}                { 
+                      yylval.str = strdup(yytext); 
+                      if (yylval.str == NULL) {
+                          fprintf(stderr, "Error: no se pudo asignar memoria para ID\n");
+                          exit(1);
+                      }
+                      return ID; 
+                    }
+
+{ENTERO}            { 
+                      yylval.entero = atoi(yytext); 
+                      return ENTERO; 
+                    }
+
+{CADENA}            { 
+                      /* Remover las comillas de la cadena */
+                      int len = strlen(yytext);
+                      if (len < 2) {
+                          fprintf(stderr, "Error: cadena mal formada\n");
+                          return -1;
+                      }
+                      yylval.str = malloc(len - 1);
+                      if (yylval.str == NULL) {
+                          fprintf(stderr, "Error: no se pudo asignar memoria para CADENA\n");
+                          exit(1);
+                      }
+                      strncpy(yylval.str, yytext + 1, len - 2);
+                      yylval.str[len - 2] = '\0';
+                      return CADENA; 
+                    }
+
+[\n\r]+             { /* Ignorar nuevas líneas */ }
 
 {SPACES}            { /* Ignorar espacios */ }
-{COMMENT}           { /* Ignorar comentarios */ }
-"//".*              { /* Ignorar comentarios de una línea */ }
-\/\*([^*]|\*[^/])*\*\/    { /* Ignorar comentarios tipo bloque */ }
-.                   { printf("Error lexico: '%c'\n", *yytext); }
+{COMMENT}           { /* Ignorar comentarios tipo bloque */ }
+"//".*[\n\r]?       { /* Ignorar comentarios de una línea */ }
+
+.                   { 
+                      fprintf(stderr, "Error léxico: carácter no reconocido '%c' (ASCII %d)\n", 
+                              *yytext, (int)*yytext); 
+                      return -1;
+                    }
+
 %%

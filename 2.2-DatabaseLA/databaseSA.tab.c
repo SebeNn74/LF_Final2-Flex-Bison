@@ -71,6 +71,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Archivo de entrada a leer */
 extern FILE *yyin;
@@ -84,7 +85,35 @@ void yyerror(const char *s);
 /* Contador de líneas válidas procesadas */
 int line_counter = 0;
 
-#line 88 "databaseSA.tab.c"
+/* Tipos y estructuras para almacenar los datos */
+typedef enum { TIPO_ENTERO, TIPO_CADENA, TIPO_BOOLEANO } TipoValor;
+
+typedef struct {
+    char* campo;
+    TipoValor tipo;
+    union {
+        int entero;
+        char* cadena;
+        int booleano;
+    } valor;
+} Atributo;
+
+typedef struct {
+    char* tabla;
+    Atributo atributos[100];
+    int cantidad;
+} InsertQuery;
+
+/* Variable global donde acumulamos los campos de una instrucción */
+InsertQuery queryActual = {NULL, {}, 0}; // INICIALIZACIÓN IMPORTANTE
+
+/* Variable temporal para el nombre del campo actual */
+char* campoActual = NULL;
+
+/* Prototipo de la función que grabará la consulta en un CSV */
+void guardarEnArchivo(InsertQuery query);
+
+#line 117 "databaseSA.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -128,12 +157,12 @@ enum yysymbol_kind_t
   YYSYMBOL_COMA = 13,                      /* COMA  */
   YYSYMBOL_DOSPUNTOS = 14,                 /* DOSPUNTOS  */
   YYSYMBOL_PUNTOCOMA = 15,                 /* PUNTOCOMA  */
-  YYSYMBOL_EOL = 16,                       /* EOL  */
+  YYSYMBOL_16_n_ = 16,                     /* '\n'  */
   YYSYMBOL_YYACCEPT = 17,                  /* $accept  */
   YYSYMBOL_input = 18,                     /* input  */
   YYSYMBOL_consulta = 19,                  /* consulta  */
-  YYSYMBOL_asignaciones = 20,              /* asignaciones  */
-  YYSYMBOL_asignacion = 21,                /* asignacion  */
+  YYSYMBOL_lista_atributos = 20,           /* lista_atributos  */
+  YYSYMBOL_atributo = 21,                  /* atributo  */
   YYSYMBOL_valor = 22                      /* valor  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
@@ -462,19 +491,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   21
+#define YYLAST   23
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  17
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  10
+#define YYNRULES  11
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  23
+#define YYNSTATES  24
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   271
+#define YYMAXUTOK   270
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -489,7 +518,7 @@ union yyalloc
 static const yytype_int8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      16,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -515,15 +544,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16
+      15
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    39,    46,    51,    52,    57,    62,    63,
-      64
+       0,    68,    68,    70,    76,    85,   116,   117,   122,   139,
+     148,   157
 };
 #endif
 
@@ -541,8 +570,8 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ID", "CADENA",
   "ENTERO", "BOOLEAN", "INSERTAR", "EN", "TABLA", "VALORES", "FIN",
-  "IGUAL", "COMA", "DOSPUNTOS", "PUNTOCOMA", "EOL", "$accept", "input",
-  "consulta", "asignaciones", "asignacion", "valor", YY_NULLPTR
+  "IGUAL", "COMA", "DOSPUNTOS", "PUNTOCOMA", "'\\n'", "$accept", "input",
+  "consulta", "lista_atributos", "atributo", "valor", YY_NULLPTR
 };
 
 static const char *
@@ -566,9 +595,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -12,     0,   -12,     1,   -11,    -1,   -12,     7,     2,     3,
-       8,     4,    -7,   -12,    -3,    -2,     8,   -12,   -12,   -12,
-     -12,   -12,   -12
+     -12,     0,   -12,   -11,     1,   -12,   -12,     2,     7,     3,
+       4,     9,     5,    -5,   -12,    -2,    -1,     9,   -12,   -12,
+     -12,   -12,   -12,   -12
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -576,21 +605,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       2,     0,     1,     0,     0,     0,     3,     0,     0,     0,
-       0,     0,     0,     5,     0,     0,     0,     8,     9,    10,
-       7,     4,     6
+       2,     0,     1,     0,     0,     3,     4,     0,     0,     0,
+       0,     0,     0,     0,     6,     0,     0,     0,     9,    10,
+      11,     8,     5,     7
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -12,   -12,   -12,   -12,     5,   -12
+     -12,   -12,   -12,   -12,     6,   -12
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     1,     4,    12,    13,    20
+       0,     1,     5,    13,    14,    21
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -598,39 +627,39 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       2,    17,    18,    19,    15,     6,    16,     3,     7,     5,
-       8,    11,     9,    21,     0,     0,    14,    10,     0,     0,
-       0,    22
+       2,     3,    18,    19,    20,     6,    16,     4,    17,     7,
+       9,     8,    12,    10,    22,     0,     0,    15,    11,     0,
+       0,     0,     0,    23
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,     4,     5,     6,    11,    16,    13,     7,     9,     8,
-       3,     3,    10,    15,    -1,    -1,    12,    14,    -1,    -1,
-      -1,    16
+       0,     1,     4,     5,     6,    16,    11,     7,    13,     8,
+       3,     9,     3,    10,    15,    -1,    -1,    12,    14,    -1,
+      -1,    -1,    -1,    17
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    18,     0,     7,    19,     8,    16,     9,     3,    10,
-      14,     3,    20,    21,    12,    11,    13,     4,     5,     6,
-      22,    15,    21
+       0,    18,     0,     1,     7,    19,    16,     8,     9,     3,
+      10,    14,     3,    20,    21,    12,    11,    13,     4,     5,
+       6,    22,    15,    21
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    17,    18,    18,    19,    20,    20,    21,    22,    22,
-      22
+       0,    17,    18,    18,    18,    19,    20,    20,    21,    22,
+      22,    22
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     3,     9,     1,     3,     3,     1,     1,
-       1
+       0,     2,     0,     2,     3,     9,     1,     3,     3,     1,
+       1,     1
 };
 
 
@@ -1093,17 +1122,113 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 3: /* input: input consulta EOL  */
-#line 39 "databaseSA.y"
-                         {
+  case 3: /* input: input consulta  */
+#line 71 "databaseSA.y"
+      {
+        /* Si llegamos aquí, "consulta" ha sido leída correctamente */
         line_counter++;
         printf("Línea %d válida.\n", line_counter);
+      }
+#line 1133 "databaseSA.tab.c"
+    break;
+
+  case 4: /* input: input error '\n'  */
+#line 77 "databaseSA.y"
+      {
+        yyerrok;
+        printf("Error en línea, continuando...\n");
+      }
+#line 1142 "databaseSA.tab.c"
+    break;
+
+  case 5: /* consulta: INSERTAR EN TABLA ID VALORES DOSPUNTOS lista_atributos FIN PUNTOCOMA  */
+#line 86 "databaseSA.y"
+    {
+        /* Verificamos que $4 no sea NULL antes de usarlo */
+        if ((yyvsp[-5].str) != NULL) {
+            if (queryActual.tabla != NULL) {
+                free(queryActual.tabla); // Liberar memoria anterior
+            }
+            queryActual.tabla = strdup((yyvsp[-5].str));
+            guardarEnArchivo(queryActual);
+        }
+        
+        /* Limpieza de memoria para la siguiente consulta */
+        for (int i = 0; i < queryActual.cantidad; i++) {
+            if (queryActual.atributos[i].campo != NULL) {
+                free(queryActual.atributos[i].campo);
+                queryActual.atributos[i].campo = NULL;
+            }
+            if (queryActual.atributos[i].tipo == TIPO_CADENA && 
+                queryActual.atributos[i].valor.cadena != NULL) {
+                free(queryActual.atributos[i].valor.cadena);
+                queryActual.atributos[i].valor.cadena = NULL;
+            }
+        }
+        queryActual.cantidad = 0;
+        
+        (yyval.str) = (yyvsp[-5].str); /* Retornamos el nombre de la tabla */
     }
-#line 1103 "databaseSA.tab.c"
+#line 1173 "databaseSA.tab.c"
+    break;
+
+  case 8: /* atributo: ID IGUAL valor  */
+#line 123 "databaseSA.y"
+    {
+        /* Verificamos que $1 no sea NULL y liberamos campoActual anterior */
+        if (campoActual != NULL) {
+            free(campoActual);
+        }
+        if ((yyvsp[-2].str) != NULL) {
+            campoActual = strdup((yyvsp[-2].str));
+        } else {
+            campoActual = NULL;
+        }
+    }
+#line 1189 "databaseSA.tab.c"
+    break;
+
+  case 9: /* valor: CADENA  */
+#line 140 "databaseSA.y"
+    {
+        if (queryActual.cantidad < 100 && campoActual != NULL && (yyvsp[0].str) != NULL) {
+            Atributo *a = &queryActual.atributos[queryActual.cantidad++];
+            a->campo = strdup(campoActual);
+            a->tipo = TIPO_CADENA;
+            a->valor.cadena = strdup((yyvsp[0].str));
+        }
+    }
+#line 1202 "databaseSA.tab.c"
+    break;
+
+  case 10: /* valor: ENTERO  */
+#line 149 "databaseSA.y"
+    {
+        if (queryActual.cantidad < 100 && campoActual != NULL) {
+            Atributo *a = &queryActual.atributos[queryActual.cantidad++];
+            a->campo = strdup(campoActual);
+            a->tipo = TIPO_ENTERO;
+            a->valor.entero = (yyvsp[0].entero);
+        }
+    }
+#line 1215 "databaseSA.tab.c"
+    break;
+
+  case 11: /* valor: BOOLEAN  */
+#line 158 "databaseSA.y"
+    {
+        if (queryActual.cantidad < 100 && campoActual != NULL) {
+            Atributo *a = &queryActual.atributos[queryActual.cantidad++];
+            a->campo = strdup(campoActual);
+            a->tipo = TIPO_BOOLEANO;
+            a->valor.booleano = (yyvsp[0].booleano);
+        }
+    }
+#line 1228 "databaseSA.tab.c"
     break;
 
 
-#line 1107 "databaseSA.tab.c"
+#line 1232 "databaseSA.tab.c"
 
       default: break;
     }
@@ -1296,18 +1421,60 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 67 "databaseSA.y"
+#line 168 "databaseSA.y"
 
 
-/* Esta función muestra errores sintácticos desde Bison */
+/* Función para mostrar errores sintácticos desde Bison */
 void yyerror(const char *s) {
     fprintf(stderr, "Error sintáctico: %s\n", s);
 }
 
-/* Función principal: abre archivo o lee de stdin y ejecuta el parser */
+/* Función que graba la consulta en archivo CSV para la "tabla" correspondiente */
+void guardarEnArchivo(InsertQuery query) {
+    if (query.tabla == NULL) {
+        fprintf(stderr, "Error: nombre de tabla es NULL\n");
+        return;
+    }
+    
+    char nombreArchivo[256];
+    snprintf(nombreArchivo, sizeof(nombreArchivo), "%s.csv", query.tabla);
+
+    FILE* f = fopen(nombreArchivo, "a");
+    if (!f) {
+        perror("No se pudo abrir el archivo");
+        return;
+    }
+
+    /* Escribimos cada atributo separado por comas */
+    for (int i = 0; i < query.cantidad; i++) {
+        Atributo *a = &query.atributos[i];
+        if (a->tipo == TIPO_ENTERO) {
+            fprintf(f, "%d", a->valor.entero);
+        } else if (a->tipo == TIPO_CADENA && a->valor.cadena != NULL) {
+            /* Escapamos comillas para el CSV */
+            fprintf(f, "\"%s\"", a->valor.cadena);
+        } else if (a->tipo == TIPO_BOOLEANO) {
+            fprintf(f, "%s", a->valor.booleano ? "verdadero" : "falso");
+        }
+        if (i < query.cantidad - 1) {
+            fprintf(f, ",");
+        }
+    }
+    fprintf(f, "\n");
+    fclose(f);
+
+    printf("Insertado en %s\n", nombreArchivo);
+}
+
+/* Función principal: lee de un archivo o de stdin, llama a yyparse() */
 int main(int argc, char **argv) {
+    // Inicializar queryActual completamente
+    queryActual.tabla = NULL;
+    queryActual.cantidad = 0;
+    memset(queryActual.atributos, 0, sizeof(queryActual.atributos));
+    
     if (argc > 1) {
-        yyin = fopen(argv[1], "r");  /* Abrir archivo pasado como argumento */
+        yyin = fopen(argv[1], "r");
         if (!yyin) {
             fprintf(stderr, "No se pudo abrir el archivo: %s\n", argv[1]);
             return 1;
@@ -1317,11 +1484,27 @@ int main(int argc, char **argv) {
         printf("Ingrese el texto para analizar (Ctrl+D para terminar):\n");
     }
 
-    yyparse(); /* Se ejecuta el parser generado */
+    int result = yyparse();
+
+    // Limpieza final de memoria
+    if (queryActual.tabla != NULL) {
+        free(queryActual.tabla);
+    }
+    if (campoActual != NULL) {
+        free(campoActual);
+    }
+    for (int i = 0; i < queryActual.cantidad; i++) {
+        if (queryActual.atributos[i].campo != NULL) {
+            free(queryActual.atributos[i].campo);
+        }
+        if (queryActual.atributos[i].tipo == TIPO_CADENA && 
+            queryActual.atributos[i].valor.cadena != NULL) {
+            free(queryActual.atributos[i].valor.cadena);
+        }
+    }
 
     if (yyin != stdin) {
         fclose(yyin);
     }
-
-    return 0;
+    return result;
 }
