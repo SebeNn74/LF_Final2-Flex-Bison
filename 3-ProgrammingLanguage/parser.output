@@ -1,0 +1,5179 @@
+State 8 conflicts: 4 shift/reduce
+State 9 conflicts: 4 shift/reduce
+State 17 conflicts: 1 shift/reduce
+State 18 conflicts: 1 shift/reduce
+State 19 conflicts: 1 shift/reduce
+State 20 conflicts: 4 shift/reduce
+State 21 conflicts: 1 shift/reduce
+State 22 conflicts: 13 reduce/reduce
+State 23 conflicts: 13 reduce/reduce
+State 36 conflicts: 13 reduce/reduce
+State 40 conflicts: 1 shift/reduce
+State 71 conflicts: 13 reduce/reduce
+State 87 conflicts: 13 reduce/reduce
+State 88 conflicts: 13 reduce/reduce
+State 89 conflicts: 13 reduce/reduce
+State 96 conflicts: 1 shift/reduce
+State 176 conflicts: 1 shift/reduce
+State 358 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: entrada $end
+
+    1 entrada: ε
+    2        | entrada linea
+
+    3 linea: EOL
+    4      | decvar
+    5      | decvector
+    6      | initvector
+    7      | vector_access EOL
+    8      | vector_assign
+    9      | intoperation EOL
+   10      | floatoperation EOL
+   11      | stringops EOL
+   12      | initvar
+   13      | asigvar
+   14      | condition
+   15      | condiComp
+   16      | loop
+   17      | decfun
+   18      | callfunc
+   19      | sentence
+   20      | operationError
+   21      | vectorError
+   22      | condiCompError
+   23      | loopError
+   24      | decfunError
+
+   25 sentences: sentence
+   26          | condiComp
+   27          | sentences sentence
+
+   28 sentence: intoperation EOL
+   29         | floatoperation EOL
+   30         | stringops EOL
+   31         | decvar EOL
+   32         | decvector EOL
+   33         | initvector EOL
+   34         | vector_access EOL
+   35         | vector_assign EOL
+   36         | asigvar
+   37         | initvar
+   38         | loop
+   39         | callfunc EOL
+
+   40 sentencesError: decfun
+
+   41 decvar: VAR IVR
+
+   42 decvector: VEC IVR COR_A INT COR_C
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS LLA vector_elements LLC EOL
+   44           | VEC IVR ASS LLA vector_elements LLC EOL
+
+   45 vector_elements: value
+   46                | vector_elements COMA value
+
+   47 vector_access: IVR COR_A INT COR_C
+   48              | IVR COR_A IVR COR_C
+
+   49 vector_assign: IVR COR_A INT COR_C ASS value EOL
+   50              | IVR COR_A INT COR_C ASS intoperation EOL
+   51              | IVR COR_A INT COR_C ASS floatoperation EOL
+   52              | IVR COR_A INT COR_C ASS stringops EOL
+   53              | IVR COR_A IVR COR_C ASS value EOL
+   54              | IVR COR_A IVR COR_C ASS intoperation EOL
+   55              | IVR COR_A IVR COR_C ASS floatoperation EOL
+   56              | IVR COR_A IVR COR_C ASS stringops EOL
+
+   57 initvar: VAR IVR ASS STR EOL
+   58        | VAR IVR ASS intoperation EOL
+   59        | VAR IVR ASS floatoperation EOL
+   60        | VAR IVR ASS stringops EOL
+   61        | VAR IVR ASS value EOL
+   62        | VAR IVR ASS vector_access EOL
+   63        | VAR IVR ASS callfunc
+
+   64 asigvar: IVR ASS value EOL
+   65        | IVR ASS intoperation EOL
+   66        | IVR ASS floatoperation EOL
+   67        | IVR ASS stringops EOL
+   68        | IVR ASS vector_access EOL
+   69        | IVR ASS callfunc
+   70        | IVR ASS STR EOL
+
+   71 value: INT
+   72      | FLO
+   73      | IVR
+   74      | vector_access
+
+   75 intoperation: INT ADD INT
+   76             | INT SUB INT
+   77             | INT MUL INT
+   78             | INT DIV INT
+   79             | FLO ADD INT
+   80             | FLO SUB INT
+   81             | FLO MUL INT
+   82             | FLO DIV INT
+   83             | INT ADD FLO
+   84             | INT SUB FLO
+   85             | INT MUL FLO
+   86             | INT DIV FLO
+   87             | vector_access ADD INT
+   88             | vector_access SUB INT
+   89             | vector_access MUL INT
+   90             | vector_access DIV INT
+   91             | INT ADD vector_access
+   92             | INT SUB vector_access
+   93             | INT MUL vector_access
+   94             | INT DIV vector_access
+   95             | vector_access ADD vector_access
+   96             | vector_access SUB vector_access
+   97             | vector_access MUL vector_access
+   98             | vector_access DIV vector_access
+
+   99 floatoperation: FLO ADD FLO
+  100               | FLO SUB FLO
+  101               | vector_access ADD FLO
+  102               | vector_access SUB FLO
+  103               | vector_access MUL FLO
+  104               | vector_access DIV FLO
+  105               | FLO ADD vector_access
+  106               | FLO SUB vector_access
+  107               | FLO MUL vector_access
+  108               | FLO DIV vector_access
+
+  109 stringops: STR ADD STR
+
+  110 operationError: STR ADD value
+  111               | STR SUB value
+  112               | STR MUL value
+  113               | STR DIV value
+  114               | value ADD STR
+  115               | value SUB STR
+  116               | value MUL STR
+  117               | value DIV STR
+
+  118 vectorError: VEC IVR COR_A COR_C
+  119            | IVR COR_A COR_C
+  120            | VEC IVR COR_A STR COR_C
+
+  121 conditionLoop: value SMR value
+  122              | value SAE value
+  123              | value GRT value
+  124              | value GAE value
+  125              | value EQU value
+  126              | value DIS value
+
+  127 condition: conditionLoop
+  128          | NEG value
+  129          | value EQU STR
+  130          | STR EQU value
+  131          | value DIS STR
+  132          | STR DIS value
+
+  133 conditionalSim: SII PAA condition PAC LLA sentences LLC
+  134               | SII PAA condition ORR condition PAC LLA sentences LLC
+  135               | SII PAA condition AND condition PAC LLA sentences LLC
+
+  136 condiComp: conditionalSim EOL
+  137          | conditionalSim SIN LLA sentences LLC EOL
+  138          | conditionalSim SIN conditionalSim EOL
+  139          | conditionalSim SIN conditionalSim SIN LLA sentences LLC EOL
+
+  140 condiError: SII PAA condition PAC LLA sentencesError LLC
+  141           | SII PAA condition ORR condition PAC LLA sentencesError LLC
+  142           | SII PAA condition AND condition PAC LLA sentencesError LLC
+
+  143 condiCompError: condiError EOL
+  144               | conditionalSim SIN LLA sentencesError LLC EOL
+  145               | conditionalSim SIN conditionalSim SIN LLA sentencesError LLC EOL
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC LLA sentences LLC EOL
+  149          | LOP PAA conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  150          | LOP PAA conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  151          | LOP PAA decvar EOL IVR ADC PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL
+
+  154 parameters: ε
+  155           | decvar
+  156           | decvar COMA parameters
+
+  157 arguments: ε
+  158          | IVR
+  159          | IVR COMA arguments
+
+  160 decfunError: FUN IFU PAA parameters PAC LLA sentences LLC EOL
+
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences ret LLC EOL
+
+  162 ret: RET value EOL
+  163    | RET intoperation EOL
+  164    | RET floatoperation EOL
+  165    | RET stringops EOL
+  166    | RET vector_access EOL
+
+  167 callfunc: IFU PAA arguments PAC
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    EOL (258) 3 7 9 10 11 28 29 30 31 32 33 34 35 39 43 44 49 50 51 52 53 54 55 56 57 58 59 60 61 62 64 65 66 67 68 70 136 137 138 139 143 144 145 146 147 148 149 150 151 152 153 160 161 162 163 164 165 166
+    VAR (259) 41 57 58 59 60 61 62 63
+    IVR (260) 41 42 43 44 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 73 118 119 120 146 147 148 149 150 151 152 153 158 159
+    VEC (261) 42 43 44 118 120
+    STR <str> (262) 57 70 109 110 111 112 113 114 115 116 117 120 129 130 131 132
+    INT <num> (263) 42 43 47 49 50 51 52 71 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94
+    FLO <num> (264) 72 79 80 81 82 83 84 85 86 99 100 101 102 103 104 105 106 107 108
+    ASS <num> (265) 43 44 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70
+    ADD <num> (266) 75 79 83 87 91 95 99 101 105 109 110 114
+    SUB <num> (267) 76 80 84 88 92 96 100 102 106 111 115
+    MUL <num> (268) 77 81 85 89 93 97 103 107 112 116
+    DIV <num> (269) 78 82 86 90 94 98 104 108 113 117
+    IFU <num> (270) 160 161 167
+    FUN <num> (271) 160 161
+    RET <num> (272) 162 163 164 165 166
+    SMR <num> (273) 121
+    SAE <num> (274) 122
+    GRT <num> (275) 123
+    GAE <num> (276) 124
+    EQU <num> (277) 125 129 130
+    NEG <num> (278) 128
+    DIS <num> (279) 126 131 132
+    AND <num> (280) 135 142
+    ORR <num> (281) 134 141
+    SII <num> (282) 133 134 135 140 141 142
+    SIN <num> (283) 137 138 139 144 145
+    LLA <num> (284) 43 44 133 134 135 137 139 140 141 142 144 145 146 147 148 149 150 151 152 153 160 161
+    LLC <num> (285) 43 44 133 134 135 137 139 140 141 142 144 145 146 147 148 149 150 151 152 153 160 161
+    PAA <num> (286) 133 134 135 140 141 142 146 147 148 149 150 151 152 153 160 161 167
+    PAC <num> (287) 133 134 135 140 141 142 146 147 148 149 150 151 152 160 161 167
+    COR_A <num> (288) 42 43 47 48 49 50 51 52 53 54 55 56 118 119 120
+    COR_C <num> (289) 42 43 47 48 49 50 51 52 53 54 55 56 118 119 120
+    LOP <num> (290) 146 147 148 149 150 151 152 153
+    ADC <num> (291) 146 149 151 152 153
+    REC <num> (292) 147 150 153
+    COMA <num> (293) 46 156 159
+
+
+Nonterminals, with rules where they appear
+
+    $accept (39)
+        on left: 0
+    entrada (40)
+        on left: 1 2
+        on right: 0 2
+    linea (41)
+        on left: 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+        on right: 2
+    sentences (42)
+        on left: 25 26 27
+        on right: 27 133 134 135 137 139 146 147 148 149 150 151 160 161
+    sentence (43)
+        on left: 28 29 30 31 32 33 34 35 36 37 38 39
+        on right: 19 25 27
+    sentencesError (44)
+        on left: 40
+        on right: 140 141 142 144 145 152 153
+    decvar (45)
+        on left: 41
+        on right: 4 31 146 147 148 151 152 153 155 156
+    decvector (46)
+        on left: 42
+        on right: 5 32
+    initvector (47)
+        on left: 43 44
+        on right: 6 33
+    vector_elements (48)
+        on left: 45 46
+        on right: 43 44 46
+    vector_access <num> (49)
+        on left: 47 48
+        on right: 7 34 62 68 74 87 88 89 90 91 92 93 94 95 96 97 98 101 102 103 104 105 106 107 108 166
+    vector_assign (50)
+        on left: 49 50 51 52 53 54 55 56
+        on right: 8 35
+    initvar (51)
+        on left: 57 58 59 60 61 62 63
+        on right: 12 37
+    asigvar (52)
+        on left: 64 65 66 67 68 69 70
+        on right: 13 36
+    value (53)
+        on left: 71 72 73 74
+        on right: 45 46 49 53 61 64 110 111 112 113 114 115 116 117 121 122 123 124 125 126 128 129 130 131 132 162
+    intoperation <num> (54)
+        on left: 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+        on right: 9 28 50 54 58 65 163
+    floatoperation <num> (55)
+        on left: 99 100 101 102 103 104 105 106 107 108
+        on right: 10 29 51 55 59 66 164
+    stringops <str> (56)
+        on left: 109
+        on right: 11 30 52 56 60 67 165
+    operationError (57)
+        on left: 110 111 112 113 114 115 116 117
+        on right: 20
+    vectorError (58)
+        on left: 118 119 120
+        on right: 21
+    conditionLoop (59)
+        on left: 121 122 123 124 125 126
+        on right: 127 146 147 148 149 150 152 153
+    condition (60)
+        on left: 127 128 129 130 131 132
+        on right: 14 133 134 135 140 141 142
+    conditionalSim (61)
+        on left: 133 134 135
+        on right: 136 137 138 139 144 145
+    condiComp (62)
+        on left: 136 137 138 139
+        on right: 15 26
+    condiError (63)
+        on left: 140 141 142
+        on right: 143
+    condiCompError (64)
+        on left: 143 144 145
+        on right: 22
+    loop (65)
+        on left: 146 147
+        on right: 16 38
+    loopError (66)
+        on left: 148 149 150 151 152 153
+        on right: 23
+    parameters (67)
+        on left: 154 155 156
+        on right: 156 160 161
+    arguments (68)
+        on left: 157 158 159
+        on right: 159 167
+    decfunError (69)
+        on left: 160
+        on right: 24
+    decfun (70)
+        on left: 161
+        on right: 17 40
+    ret (71)
+        on left: 162 163 164 165 166
+        on right: 161
+    callfunc (72)
+        on left: 167
+        on right: 18 39 63 69
+
+
+State 0
+
+    0 $accept: • entrada $end
+
+    $default  reduce using rule 1 (entrada)
+
+    entrada  go to state 1
+
+
+State 1
+
+    0 $accept: entrada • $end
+    2 entrada: entrada • linea
+
+    $end  shift, and go to state 2
+    EOL   shift, and go to state 3
+    VAR   shift, and go to state 4
+    IVR   shift, and go to state 5
+    VEC   shift, and go to state 6
+    STR   shift, and go to state 7
+    INT   shift, and go to state 8
+    FLO   shift, and go to state 9
+    IFU   shift, and go to state 10
+    FUN   shift, and go to state 11
+    NEG   shift, and go to state 12
+    SII   shift, and go to state 13
+    LOP   shift, and go to state 14
+
+    linea           go to state 15
+    sentence        go to state 16
+    decvar          go to state 17
+    decvector       go to state 18
+    initvector      go to state 19
+    vector_access   go to state 20
+    vector_assign   go to state 21
+    initvar         go to state 22
+    asigvar         go to state 23
+    value           go to state 24
+    intoperation    go to state 25
+    floatoperation  go to state 26
+    stringops       go to state 27
+    operationError  go to state 28
+    vectorError     go to state 29
+    conditionLoop   go to state 30
+    condition       go to state 31
+    conditionalSim  go to state 32
+    condiComp       go to state 33
+    condiError      go to state 34
+    condiCompError  go to state 35
+    loop            go to state 36
+    loopError       go to state 37
+    decfunError     go to state 38
+    decfun          go to state 39
+    callfunc        go to state 40
+
+
+State 2
+
+    0 $accept: entrada $end •
+
+    $default  accept
+
+
+State 3
+
+    3 linea: EOL •
+
+    $default  reduce using rule 3 (linea)
+
+
+State 4
+
+   41 decvar: VAR • IVR
+   57 initvar: VAR • IVR ASS STR EOL
+   58        | VAR • IVR ASS intoperation EOL
+   59        | VAR • IVR ASS floatoperation EOL
+   60        | VAR • IVR ASS stringops EOL
+   61        | VAR • IVR ASS value EOL
+   62        | VAR • IVR ASS vector_access EOL
+   63        | VAR • IVR ASS callfunc
+
+    IVR  shift, and go to state 41
+
+
+State 5
+
+   47 vector_access: IVR • COR_A INT COR_C
+   48              | IVR • COR_A IVR COR_C
+   49 vector_assign: IVR • COR_A INT COR_C ASS value EOL
+   50              | IVR • COR_A INT COR_C ASS intoperation EOL
+   51              | IVR • COR_A INT COR_C ASS floatoperation EOL
+   52              | IVR • COR_A INT COR_C ASS stringops EOL
+   53              | IVR • COR_A IVR COR_C ASS value EOL
+   54              | IVR • COR_A IVR COR_C ASS intoperation EOL
+   55              | IVR • COR_A IVR COR_C ASS floatoperation EOL
+   56              | IVR • COR_A IVR COR_C ASS stringops EOL
+   64 asigvar: IVR • ASS value EOL
+   65        | IVR • ASS intoperation EOL
+   66        | IVR • ASS floatoperation EOL
+   67        | IVR • ASS stringops EOL
+   68        | IVR • ASS vector_access EOL
+   69        | IVR • ASS callfunc
+   70        | IVR • ASS STR EOL
+   73 value: IVR •
+  119 vectorError: IVR • COR_A COR_C
+
+    ASS    shift, and go to state 42
+    COR_A  shift, and go to state 43
+
+    $default  reduce using rule 73 (value)
+
+
+State 6
+
+   42 decvector: VEC • IVR COR_A INT COR_C
+   43 initvector: VEC • IVR COR_A INT COR_C ASS LLA vector_elements LLC EOL
+   44           | VEC • IVR ASS LLA vector_elements LLC EOL
+  118 vectorError: VEC • IVR COR_A COR_C
+  120            | VEC • IVR COR_A STR COR_C
+
+    IVR  shift, and go to state 44
+
+
+State 7
+
+  109 stringops: STR • ADD STR
+  110 operationError: STR • ADD value
+  111               | STR • SUB value
+  112               | STR • MUL value
+  113               | STR • DIV value
+  130 condition: STR • EQU value
+  132          | STR • DIS value
+
+    ADD  shift, and go to state 45
+    SUB  shift, and go to state 46
+    MUL  shift, and go to state 47
+    DIV  shift, and go to state 48
+    EQU  shift, and go to state 49
+    DIS  shift, and go to state 50
+
+
+State 8
+
+   71 value: INT •
+   75 intoperation: INT • ADD INT
+   76             | INT • SUB INT
+   77             | INT • MUL INT
+   78             | INT • DIV INT
+   83             | INT • ADD FLO
+   84             | INT • SUB FLO
+   85             | INT • MUL FLO
+   86             | INT • DIV FLO
+   91             | INT • ADD vector_access
+   92             | INT • SUB vector_access
+   93             | INT • MUL vector_access
+   94             | INT • DIV vector_access
+
+    ADD  shift, and go to state 51
+    SUB  shift, and go to state 52
+    MUL  shift, and go to state 53
+    DIV  shift, and go to state 54
+
+    ADD       [reduce using rule 71 (value)]
+    SUB       [reduce using rule 71 (value)]
+    MUL       [reduce using rule 71 (value)]
+    DIV       [reduce using rule 71 (value)]
+    $default  reduce using rule 71 (value)
+
+
+State 9
+
+   72 value: FLO •
+   79 intoperation: FLO • ADD INT
+   80             | FLO • SUB INT
+   81             | FLO • MUL INT
+   82             | FLO • DIV INT
+   99 floatoperation: FLO • ADD FLO
+  100               | FLO • SUB FLO
+  105               | FLO • ADD vector_access
+  106               | FLO • SUB vector_access
+  107               | FLO • MUL vector_access
+  108               | FLO • DIV vector_access
+
+    ADD  shift, and go to state 55
+    SUB  shift, and go to state 56
+    MUL  shift, and go to state 57
+    DIV  shift, and go to state 58
+
+    ADD       [reduce using rule 72 (value)]
+    SUB       [reduce using rule 72 (value)]
+    MUL       [reduce using rule 72 (value)]
+    DIV       [reduce using rule 72 (value)]
+    $default  reduce using rule 72 (value)
+
+
+State 10
+
+  167 callfunc: IFU • PAA arguments PAC
+
+    PAA  shift, and go to state 59
+
+
+State 11
+
+  160 decfunError: FUN • IFU PAA parameters PAC LLA sentences LLC EOL
+  161 decfun: FUN • IFU PAA parameters PAC LLA sentences ret LLC EOL
+
+    IFU  shift, and go to state 60
+
+
+State 12
+
+  128 condition: NEG • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 65
+
+
+State 13
+
+  133 conditionalSim: SII • PAA condition PAC LLA sentences LLC
+  134               | SII • PAA condition ORR condition PAC LLA sentences LLC
+  135               | SII • PAA condition AND condition PAC LLA sentences LLC
+  140 condiError: SII • PAA condition PAC LLA sentencesError LLC
+  141           | SII • PAA condition ORR condition PAC LLA sentencesError LLC
+  142           | SII • PAA condition AND condition PAC LLA sentencesError LLC
+
+    PAA  shift, and go to state 66
+
+
+State 14
+
+  146 loop: LOP • PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP • PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP • PAA decvar EOL conditionLoop EOL IVR PAC LLA sentences LLC EOL
+  149          | LOP • PAA conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  150          | LOP • PAA conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  151          | LOP • PAA decvar EOL IVR ADC PAC LLA sentences LLC EOL
+  152          | LOP • PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP • PAA decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL
+
+    PAA  shift, and go to state 67
+
+
+State 15
+
+    2 entrada: entrada linea •
+
+    $default  reduce using rule 2 (entrada)
+
+
+State 16
+
+   19 linea: sentence •
+
+    $default  reduce using rule 19 (linea)
+
+
+State 17
+
+    4 linea: decvar •
+   31 sentence: decvar • EOL
+
+    EOL  shift, and go to state 68
+
+    EOL       [reduce using rule 4 (linea)]
+    $default  reduce using rule 4 (linea)
+
+
+State 18
+
+    5 linea: decvector •
+   32 sentence: decvector • EOL
+
+    EOL  shift, and go to state 69
+
+    EOL       [reduce using rule 5 (linea)]
+    $default  reduce using rule 5 (linea)
+
+
+State 19
+
+    6 linea: initvector •
+   33 sentence: initvector • EOL
+
+    EOL  shift, and go to state 70
+
+    EOL       [reduce using rule 6 (linea)]
+    $default  reduce using rule 6 (linea)
+
+
+State 20
+
+    7 linea: vector_access • EOL
+   34 sentence: vector_access • EOL
+   74 value: vector_access •
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+
+    EOL  shift, and go to state 71
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+    ADD       [reduce using rule 74 (value)]
+    SUB       [reduce using rule 74 (value)]
+    MUL       [reduce using rule 74 (value)]
+    DIV       [reduce using rule 74 (value)]
+    $default  reduce using rule 74 (value)
+
+
+State 21
+
+    8 linea: vector_assign •
+   35 sentence: vector_assign • EOL
+
+    EOL  shift, and go to state 76
+
+    EOL       [reduce using rule 8 (linea)]
+    $default  reduce using rule 8 (linea)
+
+
+State 22
+
+   12 linea: initvar •
+   37 sentence: initvar •
+
+    $end      reduce using rule 12 (linea)
+    $end      [reduce using rule 37 (sentence)]
+    EOL       reduce using rule 12 (linea)
+    EOL       [reduce using rule 37 (sentence)]
+    VAR       reduce using rule 12 (linea)
+    VAR       [reduce using rule 37 (sentence)]
+    IVR       reduce using rule 12 (linea)
+    IVR       [reduce using rule 37 (sentence)]
+    VEC       reduce using rule 12 (linea)
+    VEC       [reduce using rule 37 (sentence)]
+    STR       reduce using rule 12 (linea)
+    STR       [reduce using rule 37 (sentence)]
+    INT       reduce using rule 12 (linea)
+    INT       [reduce using rule 37 (sentence)]
+    FLO       reduce using rule 12 (linea)
+    FLO       [reduce using rule 37 (sentence)]
+    IFU       reduce using rule 12 (linea)
+    IFU       [reduce using rule 37 (sentence)]
+    FUN       reduce using rule 12 (linea)
+    FUN       [reduce using rule 37 (sentence)]
+    NEG       reduce using rule 12 (linea)
+    NEG       [reduce using rule 37 (sentence)]
+    SII       reduce using rule 12 (linea)
+    SII       [reduce using rule 37 (sentence)]
+    LOP       reduce using rule 12 (linea)
+    LOP       [reduce using rule 37 (sentence)]
+    $default  reduce using rule 12 (linea)
+
+
+State 23
+
+   13 linea: asigvar •
+   36 sentence: asigvar •
+
+    $end      reduce using rule 13 (linea)
+    $end      [reduce using rule 36 (sentence)]
+    EOL       reduce using rule 13 (linea)
+    EOL       [reduce using rule 36 (sentence)]
+    VAR       reduce using rule 13 (linea)
+    VAR       [reduce using rule 36 (sentence)]
+    IVR       reduce using rule 13 (linea)
+    IVR       [reduce using rule 36 (sentence)]
+    VEC       reduce using rule 13 (linea)
+    VEC       [reduce using rule 36 (sentence)]
+    STR       reduce using rule 13 (linea)
+    STR       [reduce using rule 36 (sentence)]
+    INT       reduce using rule 13 (linea)
+    INT       [reduce using rule 36 (sentence)]
+    FLO       reduce using rule 13 (linea)
+    FLO       [reduce using rule 36 (sentence)]
+    IFU       reduce using rule 13 (linea)
+    IFU       [reduce using rule 36 (sentence)]
+    FUN       reduce using rule 13 (linea)
+    FUN       [reduce using rule 36 (sentence)]
+    NEG       reduce using rule 13 (linea)
+    NEG       [reduce using rule 36 (sentence)]
+    SII       reduce using rule 13 (linea)
+    SII       [reduce using rule 36 (sentence)]
+    LOP       reduce using rule 13 (linea)
+    LOP       [reduce using rule 36 (sentence)]
+    $default  reduce using rule 13 (linea)
+
+
+State 24
+
+  114 operationError: value • ADD STR
+  115               | value • SUB STR
+  116               | value • MUL STR
+  117               | value • DIV STR
+  121 conditionLoop: value • SMR value
+  122              | value • SAE value
+  123              | value • GRT value
+  124              | value • GAE value
+  125              | value • EQU value
+  126              | value • DIS value
+  129 condition: value • EQU STR
+  131          | value • DIS STR
+
+    ADD  shift, and go to state 77
+    SUB  shift, and go to state 78
+    MUL  shift, and go to state 79
+    DIV  shift, and go to state 80
+    SMR  shift, and go to state 81
+    SAE  shift, and go to state 82
+    GRT  shift, and go to state 83
+    GAE  shift, and go to state 84
+    EQU  shift, and go to state 85
+    DIS  shift, and go to state 86
+
+
+State 25
+
+    9 linea: intoperation • EOL
+   28 sentence: intoperation • EOL
+
+    EOL  shift, and go to state 87
+
+
+State 26
+
+   10 linea: floatoperation • EOL
+   29 sentence: floatoperation • EOL
+
+    EOL  shift, and go to state 88
+
+
+State 27
+
+   11 linea: stringops • EOL
+   30 sentence: stringops • EOL
+
+    EOL  shift, and go to state 89
+
+
+State 28
+
+   20 linea: operationError •
+
+    $default  reduce using rule 20 (linea)
+
+
+State 29
+
+   21 linea: vectorError •
+
+    $default  reduce using rule 21 (linea)
+
+
+State 30
+
+  127 condition: conditionLoop •
+
+    $default  reduce using rule 127 (condition)
+
+
+State 31
+
+   14 linea: condition •
+
+    $default  reduce using rule 14 (linea)
+
+
+State 32
+
+  136 condiComp: conditionalSim • EOL
+  137          | conditionalSim • SIN LLA sentences LLC EOL
+  138          | conditionalSim • SIN conditionalSim EOL
+  139          | conditionalSim • SIN conditionalSim SIN LLA sentences LLC EOL
+  144 condiCompError: conditionalSim • SIN LLA sentencesError LLC EOL
+  145               | conditionalSim • SIN conditionalSim SIN LLA sentencesError LLC EOL
+
+    EOL  shift, and go to state 90
+    SIN  shift, and go to state 91
+
+
+State 33
+
+   15 linea: condiComp •
+
+    $default  reduce using rule 15 (linea)
+
+
+State 34
+
+  143 condiCompError: condiError • EOL
+
+    EOL  shift, and go to state 92
+
+
+State 35
+
+   22 linea: condiCompError •
+
+    $default  reduce using rule 22 (linea)
+
+
+State 36
+
+   16 linea: loop •
+   38 sentence: loop •
+
+    $end      reduce using rule 16 (linea)
+    $end      [reduce using rule 38 (sentence)]
+    EOL       reduce using rule 16 (linea)
+    EOL       [reduce using rule 38 (sentence)]
+    VAR       reduce using rule 16 (linea)
+    VAR       [reduce using rule 38 (sentence)]
+    IVR       reduce using rule 16 (linea)
+    IVR       [reduce using rule 38 (sentence)]
+    VEC       reduce using rule 16 (linea)
+    VEC       [reduce using rule 38 (sentence)]
+    STR       reduce using rule 16 (linea)
+    STR       [reduce using rule 38 (sentence)]
+    INT       reduce using rule 16 (linea)
+    INT       [reduce using rule 38 (sentence)]
+    FLO       reduce using rule 16 (linea)
+    FLO       [reduce using rule 38 (sentence)]
+    IFU       reduce using rule 16 (linea)
+    IFU       [reduce using rule 38 (sentence)]
+    FUN       reduce using rule 16 (linea)
+    FUN       [reduce using rule 38 (sentence)]
+    NEG       reduce using rule 16 (linea)
+    NEG       [reduce using rule 38 (sentence)]
+    SII       reduce using rule 16 (linea)
+    SII       [reduce using rule 38 (sentence)]
+    LOP       reduce using rule 16 (linea)
+    LOP       [reduce using rule 38 (sentence)]
+    $default  reduce using rule 16 (linea)
+
+
+State 37
+
+   23 linea: loopError •
+
+    $default  reduce using rule 23 (linea)
+
+
+State 38
+
+   24 linea: decfunError •
+
+    $default  reduce using rule 24 (linea)
+
+
+State 39
+
+   17 linea: decfun •
+
+    $default  reduce using rule 17 (linea)
+
+
+State 40
+
+   18 linea: callfunc •
+   39 sentence: callfunc • EOL
+
+    EOL  shift, and go to state 93
+
+    EOL       [reduce using rule 18 (linea)]
+    $default  reduce using rule 18 (linea)
+
+
+State 41
+
+   41 decvar: VAR IVR •
+   57 initvar: VAR IVR • ASS STR EOL
+   58        | VAR IVR • ASS intoperation EOL
+   59        | VAR IVR • ASS floatoperation EOL
+   60        | VAR IVR • ASS stringops EOL
+   61        | VAR IVR • ASS value EOL
+   62        | VAR IVR • ASS vector_access EOL
+   63        | VAR IVR • ASS callfunc
+
+    ASS  shift, and go to state 94
+
+    $default  reduce using rule 41 (decvar)
+
+
+State 42
+
+   64 asigvar: IVR ASS • value EOL
+   65        | IVR ASS • intoperation EOL
+   66        | IVR ASS • floatoperation EOL
+   67        | IVR ASS • stringops EOL
+   68        | IVR ASS • vector_access EOL
+   69        | IVR ASS • callfunc
+   70        | IVR ASS • STR EOL
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 95
+    INT  shift, and go to state 8
+    FLO  shift, and go to state 9
+    IFU  shift, and go to state 10
+
+    vector_access   go to state 96
+    value           go to state 97
+    intoperation    go to state 98
+    floatoperation  go to state 99
+    stringops       go to state 100
+    callfunc        go to state 101
+
+
+State 43
+
+   47 vector_access: IVR COR_A • INT COR_C
+   48              | IVR COR_A • IVR COR_C
+   49 vector_assign: IVR COR_A • INT COR_C ASS value EOL
+   50              | IVR COR_A • INT COR_C ASS intoperation EOL
+   51              | IVR COR_A • INT COR_C ASS floatoperation EOL
+   52              | IVR COR_A • INT COR_C ASS stringops EOL
+   53              | IVR COR_A • IVR COR_C ASS value EOL
+   54              | IVR COR_A • IVR COR_C ASS intoperation EOL
+   55              | IVR COR_A • IVR COR_C ASS floatoperation EOL
+   56              | IVR COR_A • IVR COR_C ASS stringops EOL
+  119 vectorError: IVR COR_A • COR_C
+
+    IVR    shift, and go to state 102
+    INT    shift, and go to state 103
+    COR_C  shift, and go to state 104
+
+
+State 44
+
+   42 decvector: VEC IVR • COR_A INT COR_C
+   43 initvector: VEC IVR • COR_A INT COR_C ASS LLA vector_elements LLC EOL
+   44           | VEC IVR • ASS LLA vector_elements LLC EOL
+  118 vectorError: VEC IVR • COR_A COR_C
+  120            | VEC IVR • COR_A STR COR_C
+
+    ASS    shift, and go to state 105
+    COR_A  shift, and go to state 106
+
+
+State 45
+
+  109 stringops: STR ADD • STR
+  110 operationError: STR ADD • value
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 107
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 108
+
+
+State 46
+
+  111 operationError: STR SUB • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 109
+
+
+State 47
+
+  112 operationError: STR MUL • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 110
+
+
+State 48
+
+  113 operationError: STR DIV • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 111
+
+
+State 49
+
+  130 condition: STR EQU • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 112
+
+
+State 50
+
+  132 condition: STR DIS • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 113
+
+
+State 51
+
+   75 intoperation: INT ADD • INT
+   83             | INT ADD • FLO
+   91             | INT ADD • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 115
+    FLO  shift, and go to state 116
+
+    vector_access  go to state 117
+
+
+State 52
+
+   76 intoperation: INT SUB • INT
+   84             | INT SUB • FLO
+   92             | INT SUB • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 118
+    FLO  shift, and go to state 119
+
+    vector_access  go to state 120
+
+
+State 53
+
+   77 intoperation: INT MUL • INT
+   85             | INT MUL • FLO
+   93             | INT MUL • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 121
+    FLO  shift, and go to state 122
+
+    vector_access  go to state 123
+
+
+State 54
+
+   78 intoperation: INT DIV • INT
+   86             | INT DIV • FLO
+   94             | INT DIV • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 124
+    FLO  shift, and go to state 125
+
+    vector_access  go to state 126
+
+
+State 55
+
+   79 intoperation: FLO ADD • INT
+   99 floatoperation: FLO ADD • FLO
+  105               | FLO ADD • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 127
+    FLO  shift, and go to state 128
+
+    vector_access  go to state 129
+
+
+State 56
+
+   80 intoperation: FLO SUB • INT
+  100 floatoperation: FLO SUB • FLO
+  106               | FLO SUB • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 130
+    FLO  shift, and go to state 131
+
+    vector_access  go to state 132
+
+
+State 57
+
+   81 intoperation: FLO MUL • INT
+  107 floatoperation: FLO MUL • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 133
+
+    vector_access  go to state 134
+
+
+State 58
+
+   82 intoperation: FLO DIV • INT
+  108 floatoperation: FLO DIV • vector_access
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 135
+
+    vector_access  go to state 136
+
+
+State 59
+
+  167 callfunc: IFU PAA • arguments PAC
+
+    IVR  shift, and go to state 137
+
+    $default  reduce using rule 157 (arguments)
+
+    arguments  go to state 138
+
+
+State 60
+
+  160 decfunError: FUN IFU • PAA parameters PAC LLA sentences LLC EOL
+  161 decfun: FUN IFU • PAA parameters PAC LLA sentences ret LLC EOL
+
+    PAA  shift, and go to state 139
+
+
+State 61
+
+   47 vector_access: IVR • COR_A INT COR_C
+   48              | IVR • COR_A IVR COR_C
+   73 value: IVR •
+
+    COR_A  shift, and go to state 140
+
+    $default  reduce using rule 73 (value)
+
+
+State 62
+
+   71 value: INT •
+
+    $default  reduce using rule 71 (value)
+
+
+State 63
+
+   72 value: FLO •
+
+    $default  reduce using rule 72 (value)
+
+
+State 64
+
+   74 value: vector_access •
+
+    $default  reduce using rule 74 (value)
+
+
+State 65
+
+  128 condition: NEG value •
+
+    $default  reduce using rule 128 (condition)
+
+
+State 66
+
+  133 conditionalSim: SII PAA • condition PAC LLA sentences LLC
+  134               | SII PAA • condition ORR condition PAC LLA sentences LLC
+  135               | SII PAA • condition AND condition PAC LLA sentences LLC
+  140 condiError: SII PAA • condition PAC LLA sentencesError LLC
+  141           | SII PAA • condition ORR condition PAC LLA sentencesError LLC
+  142           | SII PAA • condition AND condition PAC LLA sentencesError LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 143
+
+
+State 67
+
+  146 loop: LOP PAA • decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA • decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA • decvar EOL conditionLoop EOL IVR PAC LLA sentences LLC EOL
+  149          | LOP PAA • conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  150          | LOP PAA • conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  151          | LOP PAA • decvar EOL IVR ADC PAC LLA sentences LLC EOL
+  152          | LOP PAA • decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA • decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL
+
+    VAR  shift, and go to state 144
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    decvar         go to state 145
+    vector_access  go to state 64
+    value          go to state 146
+    conditionLoop  go to state 147
+
+
+State 68
+
+   31 sentence: decvar EOL •
+
+    $default  reduce using rule 31 (sentence)
+
+
+State 69
+
+   32 sentence: decvector EOL •
+
+    $default  reduce using rule 32 (sentence)
+
+
+State 70
+
+   33 sentence: initvector EOL •
+
+    $default  reduce using rule 33 (sentence)
+
+
+State 71
+
+    7 linea: vector_access EOL •
+   34 sentence: vector_access EOL •
+
+    $end      reduce using rule 7 (linea)
+    $end      [reduce using rule 34 (sentence)]
+    EOL       reduce using rule 7 (linea)
+    EOL       [reduce using rule 34 (sentence)]
+    VAR       reduce using rule 7 (linea)
+    VAR       [reduce using rule 34 (sentence)]
+    IVR       reduce using rule 7 (linea)
+    IVR       [reduce using rule 34 (sentence)]
+    VEC       reduce using rule 7 (linea)
+    VEC       [reduce using rule 34 (sentence)]
+    STR       reduce using rule 7 (linea)
+    STR       [reduce using rule 34 (sentence)]
+    INT       reduce using rule 7 (linea)
+    INT       [reduce using rule 34 (sentence)]
+    FLO       reduce using rule 7 (linea)
+    FLO       [reduce using rule 34 (sentence)]
+    IFU       reduce using rule 7 (linea)
+    IFU       [reduce using rule 34 (sentence)]
+    FUN       reduce using rule 7 (linea)
+    FUN       [reduce using rule 34 (sentence)]
+    NEG       reduce using rule 7 (linea)
+    NEG       [reduce using rule 34 (sentence)]
+    SII       reduce using rule 7 (linea)
+    SII       [reduce using rule 34 (sentence)]
+    LOP       reduce using rule 7 (linea)
+    LOP       [reduce using rule 34 (sentence)]
+    $default  reduce using rule 7 (linea)
+
+
+State 72
+
+   87 intoperation: vector_access ADD • INT
+   95             | vector_access ADD • vector_access
+  101 floatoperation: vector_access ADD • FLO
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 148
+    FLO  shift, and go to state 149
+
+    vector_access  go to state 150
+
+
+State 73
+
+   88 intoperation: vector_access SUB • INT
+   96             | vector_access SUB • vector_access
+  102 floatoperation: vector_access SUB • FLO
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 151
+    FLO  shift, and go to state 152
+
+    vector_access  go to state 153
+
+
+State 74
+
+   89 intoperation: vector_access MUL • INT
+   97             | vector_access MUL • vector_access
+  103 floatoperation: vector_access MUL • FLO
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 154
+    FLO  shift, and go to state 155
+
+    vector_access  go to state 156
+
+
+State 75
+
+   90 intoperation: vector_access DIV • INT
+   98             | vector_access DIV • vector_access
+  104 floatoperation: vector_access DIV • FLO
+
+    IVR  shift, and go to state 114
+    INT  shift, and go to state 157
+    FLO  shift, and go to state 158
+
+    vector_access  go to state 159
+
+
+State 76
+
+   35 sentence: vector_assign EOL •
+
+    $default  reduce using rule 35 (sentence)
+
+
+State 77
+
+  114 operationError: value ADD • STR
+
+    STR  shift, and go to state 160
+
+
+State 78
+
+  115 operationError: value SUB • STR
+
+    STR  shift, and go to state 161
+
+
+State 79
+
+  116 operationError: value MUL • STR
+
+    STR  shift, and go to state 162
+
+
+State 80
+
+  117 operationError: value DIV • STR
+
+    STR  shift, and go to state 163
+
+
+State 81
+
+  121 conditionLoop: value SMR • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 164
+
+
+State 82
+
+  122 conditionLoop: value SAE • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 165
+
+
+State 83
+
+  123 conditionLoop: value GRT • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 166
+
+
+State 84
+
+  124 conditionLoop: value GAE • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 167
+
+
+State 85
+
+  125 conditionLoop: value EQU • value
+  129 condition: value EQU • STR
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 168
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 169
+
+
+State 86
+
+  126 conditionLoop: value DIS • value
+  131 condition: value DIS • STR
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 170
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 171
+
+
+State 87
+
+    9 linea: intoperation EOL •
+   28 sentence: intoperation EOL •
+
+    $end      reduce using rule 9 (linea)
+    $end      [reduce using rule 28 (sentence)]
+    EOL       reduce using rule 9 (linea)
+    EOL       [reduce using rule 28 (sentence)]
+    VAR       reduce using rule 9 (linea)
+    VAR       [reduce using rule 28 (sentence)]
+    IVR       reduce using rule 9 (linea)
+    IVR       [reduce using rule 28 (sentence)]
+    VEC       reduce using rule 9 (linea)
+    VEC       [reduce using rule 28 (sentence)]
+    STR       reduce using rule 9 (linea)
+    STR       [reduce using rule 28 (sentence)]
+    INT       reduce using rule 9 (linea)
+    INT       [reduce using rule 28 (sentence)]
+    FLO       reduce using rule 9 (linea)
+    FLO       [reduce using rule 28 (sentence)]
+    IFU       reduce using rule 9 (linea)
+    IFU       [reduce using rule 28 (sentence)]
+    FUN       reduce using rule 9 (linea)
+    FUN       [reduce using rule 28 (sentence)]
+    NEG       reduce using rule 9 (linea)
+    NEG       [reduce using rule 28 (sentence)]
+    SII       reduce using rule 9 (linea)
+    SII       [reduce using rule 28 (sentence)]
+    LOP       reduce using rule 9 (linea)
+    LOP       [reduce using rule 28 (sentence)]
+    $default  reduce using rule 9 (linea)
+
+
+State 88
+
+   10 linea: floatoperation EOL •
+   29 sentence: floatoperation EOL •
+
+    $end      reduce using rule 10 (linea)
+    $end      [reduce using rule 29 (sentence)]
+    EOL       reduce using rule 10 (linea)
+    EOL       [reduce using rule 29 (sentence)]
+    VAR       reduce using rule 10 (linea)
+    VAR       [reduce using rule 29 (sentence)]
+    IVR       reduce using rule 10 (linea)
+    IVR       [reduce using rule 29 (sentence)]
+    VEC       reduce using rule 10 (linea)
+    VEC       [reduce using rule 29 (sentence)]
+    STR       reduce using rule 10 (linea)
+    STR       [reduce using rule 29 (sentence)]
+    INT       reduce using rule 10 (linea)
+    INT       [reduce using rule 29 (sentence)]
+    FLO       reduce using rule 10 (linea)
+    FLO       [reduce using rule 29 (sentence)]
+    IFU       reduce using rule 10 (linea)
+    IFU       [reduce using rule 29 (sentence)]
+    FUN       reduce using rule 10 (linea)
+    FUN       [reduce using rule 29 (sentence)]
+    NEG       reduce using rule 10 (linea)
+    NEG       [reduce using rule 29 (sentence)]
+    SII       reduce using rule 10 (linea)
+    SII       [reduce using rule 29 (sentence)]
+    LOP       reduce using rule 10 (linea)
+    LOP       [reduce using rule 29 (sentence)]
+    $default  reduce using rule 10 (linea)
+
+
+State 89
+
+   11 linea: stringops EOL •
+   30 sentence: stringops EOL •
+
+    $end      reduce using rule 11 (linea)
+    $end      [reduce using rule 30 (sentence)]
+    EOL       reduce using rule 11 (linea)
+    EOL       [reduce using rule 30 (sentence)]
+    VAR       reduce using rule 11 (linea)
+    VAR       [reduce using rule 30 (sentence)]
+    IVR       reduce using rule 11 (linea)
+    IVR       [reduce using rule 30 (sentence)]
+    VEC       reduce using rule 11 (linea)
+    VEC       [reduce using rule 30 (sentence)]
+    STR       reduce using rule 11 (linea)
+    STR       [reduce using rule 30 (sentence)]
+    INT       reduce using rule 11 (linea)
+    INT       [reduce using rule 30 (sentence)]
+    FLO       reduce using rule 11 (linea)
+    FLO       [reduce using rule 30 (sentence)]
+    IFU       reduce using rule 11 (linea)
+    IFU       [reduce using rule 30 (sentence)]
+    FUN       reduce using rule 11 (linea)
+    FUN       [reduce using rule 30 (sentence)]
+    NEG       reduce using rule 11 (linea)
+    NEG       [reduce using rule 30 (sentence)]
+    SII       reduce using rule 11 (linea)
+    SII       [reduce using rule 30 (sentence)]
+    LOP       reduce using rule 11 (linea)
+    LOP       [reduce using rule 30 (sentence)]
+    $default  reduce using rule 11 (linea)
+
+
+State 90
+
+  136 condiComp: conditionalSim EOL •
+
+    $default  reduce using rule 136 (condiComp)
+
+
+State 91
+
+  137 condiComp: conditionalSim SIN • LLA sentences LLC EOL
+  138          | conditionalSim SIN • conditionalSim EOL
+  139          | conditionalSim SIN • conditionalSim SIN LLA sentences LLC EOL
+  144 condiCompError: conditionalSim SIN • LLA sentencesError LLC EOL
+  145               | conditionalSim SIN • conditionalSim SIN LLA sentencesError LLC EOL
+
+    SII  shift, and go to state 172
+    LLA  shift, and go to state 173
+
+    conditionalSim  go to state 174
+
+
+State 92
+
+  143 condiCompError: condiError EOL •
+
+    $default  reduce using rule 143 (condiCompError)
+
+
+State 93
+
+   39 sentence: callfunc EOL •
+
+    $default  reduce using rule 39 (sentence)
+
+
+State 94
+
+   57 initvar: VAR IVR ASS • STR EOL
+   58        | VAR IVR ASS • intoperation EOL
+   59        | VAR IVR ASS • floatoperation EOL
+   60        | VAR IVR ASS • stringops EOL
+   61        | VAR IVR ASS • value EOL
+   62        | VAR IVR ASS • vector_access EOL
+   63        | VAR IVR ASS • callfunc
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 175
+    INT  shift, and go to state 8
+    FLO  shift, and go to state 9
+    IFU  shift, and go to state 10
+
+    vector_access   go to state 176
+    value           go to state 177
+    intoperation    go to state 178
+    floatoperation  go to state 179
+    stringops       go to state 180
+    callfunc        go to state 181
+
+
+State 95
+
+   70 asigvar: IVR ASS STR • EOL
+  109 stringops: STR • ADD STR
+
+    EOL  shift, and go to state 182
+    ADD  shift, and go to state 183
+
+
+State 96
+
+   68 asigvar: IVR ASS vector_access • EOL
+   74 value: vector_access •
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+
+    EOL  shift, and go to state 184
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+    EOL  [reduce using rule 74 (value)]
+
+
+State 97
+
+   64 asigvar: IVR ASS value • EOL
+
+    EOL  shift, and go to state 185
+
+
+State 98
+
+   65 asigvar: IVR ASS intoperation • EOL
+
+    EOL  shift, and go to state 186
+
+
+State 99
+
+   66 asigvar: IVR ASS floatoperation • EOL
+
+    EOL  shift, and go to state 187
+
+
+State 100
+
+   67 asigvar: IVR ASS stringops • EOL
+
+    EOL  shift, and go to state 188
+
+
+State 101
+
+   69 asigvar: IVR ASS callfunc •
+
+    $default  reduce using rule 69 (asigvar)
+
+
+State 102
+
+   48 vector_access: IVR COR_A IVR • COR_C
+   53 vector_assign: IVR COR_A IVR • COR_C ASS value EOL
+   54              | IVR COR_A IVR • COR_C ASS intoperation EOL
+   55              | IVR COR_A IVR • COR_C ASS floatoperation EOL
+   56              | IVR COR_A IVR • COR_C ASS stringops EOL
+
+    COR_C  shift, and go to state 189
+
+
+State 103
+
+   47 vector_access: IVR COR_A INT • COR_C
+   49 vector_assign: IVR COR_A INT • COR_C ASS value EOL
+   50              | IVR COR_A INT • COR_C ASS intoperation EOL
+   51              | IVR COR_A INT • COR_C ASS floatoperation EOL
+   52              | IVR COR_A INT • COR_C ASS stringops EOL
+
+    COR_C  shift, and go to state 190
+
+
+State 104
+
+  119 vectorError: IVR COR_A COR_C •
+
+    $default  reduce using rule 119 (vectorError)
+
+
+State 105
+
+   44 initvector: VEC IVR ASS • LLA vector_elements LLC EOL
+
+    LLA  shift, and go to state 191
+
+
+State 106
+
+   42 decvector: VEC IVR COR_A • INT COR_C
+   43 initvector: VEC IVR COR_A • INT COR_C ASS LLA vector_elements LLC EOL
+  118 vectorError: VEC IVR COR_A • COR_C
+  120            | VEC IVR COR_A • STR COR_C
+
+    STR    shift, and go to state 192
+    INT    shift, and go to state 193
+    COR_C  shift, and go to state 194
+
+
+State 107
+
+  109 stringops: STR ADD STR •
+
+    $default  reduce using rule 109 (stringops)
+
+
+State 108
+
+  110 operationError: STR ADD value •
+
+    $default  reduce using rule 110 (operationError)
+
+
+State 109
+
+  111 operationError: STR SUB value •
+
+    $default  reduce using rule 111 (operationError)
+
+
+State 110
+
+  112 operationError: STR MUL value •
+
+    $default  reduce using rule 112 (operationError)
+
+
+State 111
+
+  113 operationError: STR DIV value •
+
+    $default  reduce using rule 113 (operationError)
+
+
+State 112
+
+  130 condition: STR EQU value •
+
+    $default  reduce using rule 130 (condition)
+
+
+State 113
+
+  132 condition: STR DIS value •
+
+    $default  reduce using rule 132 (condition)
+
+
+State 114
+
+   47 vector_access: IVR • COR_A INT COR_C
+   48              | IVR • COR_A IVR COR_C
+
+    COR_A  shift, and go to state 140
+
+
+State 115
+
+   75 intoperation: INT ADD INT •
+
+    $default  reduce using rule 75 (intoperation)
+
+
+State 116
+
+   83 intoperation: INT ADD FLO •
+
+    $default  reduce using rule 83 (intoperation)
+
+
+State 117
+
+   91 intoperation: INT ADD vector_access •
+
+    $default  reduce using rule 91 (intoperation)
+
+
+State 118
+
+   76 intoperation: INT SUB INT •
+
+    $default  reduce using rule 76 (intoperation)
+
+
+State 119
+
+   84 intoperation: INT SUB FLO •
+
+    $default  reduce using rule 84 (intoperation)
+
+
+State 120
+
+   92 intoperation: INT SUB vector_access •
+
+    $default  reduce using rule 92 (intoperation)
+
+
+State 121
+
+   77 intoperation: INT MUL INT •
+
+    $default  reduce using rule 77 (intoperation)
+
+
+State 122
+
+   85 intoperation: INT MUL FLO •
+
+    $default  reduce using rule 85 (intoperation)
+
+
+State 123
+
+   93 intoperation: INT MUL vector_access •
+
+    $default  reduce using rule 93 (intoperation)
+
+
+State 124
+
+   78 intoperation: INT DIV INT •
+
+    $default  reduce using rule 78 (intoperation)
+
+
+State 125
+
+   86 intoperation: INT DIV FLO •
+
+    $default  reduce using rule 86 (intoperation)
+
+
+State 126
+
+   94 intoperation: INT DIV vector_access •
+
+    $default  reduce using rule 94 (intoperation)
+
+
+State 127
+
+   79 intoperation: FLO ADD INT •
+
+    $default  reduce using rule 79 (intoperation)
+
+
+State 128
+
+   99 floatoperation: FLO ADD FLO •
+
+    $default  reduce using rule 99 (floatoperation)
+
+
+State 129
+
+  105 floatoperation: FLO ADD vector_access •
+
+    $default  reduce using rule 105 (floatoperation)
+
+
+State 130
+
+   80 intoperation: FLO SUB INT •
+
+    $default  reduce using rule 80 (intoperation)
+
+
+State 131
+
+  100 floatoperation: FLO SUB FLO •
+
+    $default  reduce using rule 100 (floatoperation)
+
+
+State 132
+
+  106 floatoperation: FLO SUB vector_access •
+
+    $default  reduce using rule 106 (floatoperation)
+
+
+State 133
+
+   81 intoperation: FLO MUL INT •
+
+    $default  reduce using rule 81 (intoperation)
+
+
+State 134
+
+  107 floatoperation: FLO MUL vector_access •
+
+    $default  reduce using rule 107 (floatoperation)
+
+
+State 135
+
+   82 intoperation: FLO DIV INT •
+
+    $default  reduce using rule 82 (intoperation)
+
+
+State 136
+
+  108 floatoperation: FLO DIV vector_access •
+
+    $default  reduce using rule 108 (floatoperation)
+
+
+State 137
+
+  158 arguments: IVR •
+  159          | IVR • COMA arguments
+
+    COMA  shift, and go to state 195
+
+    $default  reduce using rule 158 (arguments)
+
+
+State 138
+
+  167 callfunc: IFU PAA arguments • PAC
+
+    PAC  shift, and go to state 196
+
+
+State 139
+
+  160 decfunError: FUN IFU PAA • parameters PAC LLA sentences LLC EOL
+  161 decfun: FUN IFU PAA • parameters PAC LLA sentences ret LLC EOL
+
+    VAR  shift, and go to state 144
+
+    $default  reduce using rule 154 (parameters)
+
+    decvar      go to state 197
+    parameters  go to state 198
+
+
+State 140
+
+   47 vector_access: IVR COR_A • INT COR_C
+   48              | IVR COR_A • IVR COR_C
+
+    IVR  shift, and go to state 199
+    INT  shift, and go to state 200
+
+
+State 141
+
+  130 condition: STR • EQU value
+  132          | STR • DIS value
+
+    EQU  shift, and go to state 49
+    DIS  shift, and go to state 50
+
+
+State 142
+
+  121 conditionLoop: value • SMR value
+  122              | value • SAE value
+  123              | value • GRT value
+  124              | value • GAE value
+  125              | value • EQU value
+  126              | value • DIS value
+  129 condition: value • EQU STR
+  131          | value • DIS STR
+
+    SMR  shift, and go to state 81
+    SAE  shift, and go to state 82
+    GRT  shift, and go to state 83
+    GAE  shift, and go to state 84
+    EQU  shift, and go to state 85
+    DIS  shift, and go to state 86
+
+
+State 143
+
+  133 conditionalSim: SII PAA condition • PAC LLA sentences LLC
+  134               | SII PAA condition • ORR condition PAC LLA sentences LLC
+  135               | SII PAA condition • AND condition PAC LLA sentences LLC
+  140 condiError: SII PAA condition • PAC LLA sentencesError LLC
+  141           | SII PAA condition • ORR condition PAC LLA sentencesError LLC
+  142           | SII PAA condition • AND condition PAC LLA sentencesError LLC
+
+    AND  shift, and go to state 201
+    ORR  shift, and go to state 202
+    PAC  shift, and go to state 203
+
+
+State 144
+
+   41 decvar: VAR • IVR
+
+    IVR  shift, and go to state 204
+
+
+State 145
+
+  146 loop: LOP PAA decvar • EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar • EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA decvar • EOL conditionLoop EOL IVR PAC LLA sentences LLC EOL
+  151          | LOP PAA decvar • EOL IVR ADC PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar • EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar • EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL
+
+    EOL  shift, and go to state 205
+
+
+State 146
+
+  121 conditionLoop: value • SMR value
+  122              | value • SAE value
+  123              | value • GRT value
+  124              | value • GAE value
+  125              | value • EQU value
+  126              | value • DIS value
+
+    SMR  shift, and go to state 81
+    SAE  shift, and go to state 82
+    GRT  shift, and go to state 83
+    GAE  shift, and go to state 84
+    EQU  shift, and go to state 206
+    DIS  shift, and go to state 207
+
+
+State 147
+
+  149 loopError: LOP PAA conditionLoop • EOL IVR ADC PAC LLA sentences LLC EOL
+  150          | LOP PAA conditionLoop • EOL IVR REC PAC LLA sentences LLC EOL
+
+    EOL  shift, and go to state 208
+
+
+State 148
+
+   87 intoperation: vector_access ADD INT •
+
+    $default  reduce using rule 87 (intoperation)
+
+
+State 149
+
+  101 floatoperation: vector_access ADD FLO •
+
+    $default  reduce using rule 101 (floatoperation)
+
+
+State 150
+
+   95 intoperation: vector_access ADD vector_access •
+
+    $default  reduce using rule 95 (intoperation)
+
+
+State 151
+
+   88 intoperation: vector_access SUB INT •
+
+    $default  reduce using rule 88 (intoperation)
+
+
+State 152
+
+  102 floatoperation: vector_access SUB FLO •
+
+    $default  reduce using rule 102 (floatoperation)
+
+
+State 153
+
+   96 intoperation: vector_access SUB vector_access •
+
+    $default  reduce using rule 96 (intoperation)
+
+
+State 154
+
+   89 intoperation: vector_access MUL INT •
+
+    $default  reduce using rule 89 (intoperation)
+
+
+State 155
+
+  103 floatoperation: vector_access MUL FLO •
+
+    $default  reduce using rule 103 (floatoperation)
+
+
+State 156
+
+   97 intoperation: vector_access MUL vector_access •
+
+    $default  reduce using rule 97 (intoperation)
+
+
+State 157
+
+   90 intoperation: vector_access DIV INT •
+
+    $default  reduce using rule 90 (intoperation)
+
+
+State 158
+
+  104 floatoperation: vector_access DIV FLO •
+
+    $default  reduce using rule 104 (floatoperation)
+
+
+State 159
+
+   98 intoperation: vector_access DIV vector_access •
+
+    $default  reduce using rule 98 (intoperation)
+
+
+State 160
+
+  114 operationError: value ADD STR •
+
+    $default  reduce using rule 114 (operationError)
+
+
+State 161
+
+  115 operationError: value SUB STR •
+
+    $default  reduce using rule 115 (operationError)
+
+
+State 162
+
+  116 operationError: value MUL STR •
+
+    $default  reduce using rule 116 (operationError)
+
+
+State 163
+
+  117 operationError: value DIV STR •
+
+    $default  reduce using rule 117 (operationError)
+
+
+State 164
+
+  121 conditionLoop: value SMR value •
+
+    $default  reduce using rule 121 (conditionLoop)
+
+
+State 165
+
+  122 conditionLoop: value SAE value •
+
+    $default  reduce using rule 122 (conditionLoop)
+
+
+State 166
+
+  123 conditionLoop: value GRT value •
+
+    $default  reduce using rule 123 (conditionLoop)
+
+
+State 167
+
+  124 conditionLoop: value GAE value •
+
+    $default  reduce using rule 124 (conditionLoop)
+
+
+State 168
+
+  129 condition: value EQU STR •
+
+    $default  reduce using rule 129 (condition)
+
+
+State 169
+
+  125 conditionLoop: value EQU value •
+
+    $default  reduce using rule 125 (conditionLoop)
+
+
+State 170
+
+  131 condition: value DIS STR •
+
+    $default  reduce using rule 131 (condition)
+
+
+State 171
+
+  126 conditionLoop: value DIS value •
+
+    $default  reduce using rule 126 (conditionLoop)
+
+
+State 172
+
+  133 conditionalSim: SII • PAA condition PAC LLA sentences LLC
+  134               | SII • PAA condition ORR condition PAC LLA sentences LLC
+  135               | SII • PAA condition AND condition PAC LLA sentences LLC
+
+    PAA  shift, and go to state 209
+
+
+State 173
+
+  137 condiComp: conditionalSim SIN LLA • sentences LLC EOL
+  144 condiCompError: conditionalSim SIN LLA • sentencesError LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 217
+    sentence        go to state 218
+    sentencesError  go to state 219
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 174
+
+  138 condiComp: conditionalSim SIN conditionalSim • EOL
+  139          | conditionalSim SIN conditionalSim • SIN LLA sentences LLC EOL
+  145 condiCompError: conditionalSim SIN conditionalSim • SIN LLA sentencesError LLC EOL
+
+    EOL  shift, and go to state 235
+    SIN  shift, and go to state 236
+
+
+State 175
+
+   57 initvar: VAR IVR ASS STR • EOL
+  109 stringops: STR • ADD STR
+
+    EOL  shift, and go to state 237
+    ADD  shift, and go to state 183
+
+
+State 176
+
+   62 initvar: VAR IVR ASS vector_access • EOL
+   74 value: vector_access •
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+
+    EOL  shift, and go to state 238
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+    EOL  [reduce using rule 74 (value)]
+
+
+State 177
+
+   61 initvar: VAR IVR ASS value • EOL
+
+    EOL  shift, and go to state 239
+
+
+State 178
+
+   58 initvar: VAR IVR ASS intoperation • EOL
+
+    EOL  shift, and go to state 240
+
+
+State 179
+
+   59 initvar: VAR IVR ASS floatoperation • EOL
+
+    EOL  shift, and go to state 241
+
+
+State 180
+
+   60 initvar: VAR IVR ASS stringops • EOL
+
+    EOL  shift, and go to state 242
+
+
+State 181
+
+   63 initvar: VAR IVR ASS callfunc •
+
+    $default  reduce using rule 63 (initvar)
+
+
+State 182
+
+   70 asigvar: IVR ASS STR EOL •
+
+    $default  reduce using rule 70 (asigvar)
+
+
+State 183
+
+  109 stringops: STR ADD • STR
+
+    STR  shift, and go to state 107
+
+
+State 184
+
+   68 asigvar: IVR ASS vector_access EOL •
+
+    $default  reduce using rule 68 (asigvar)
+
+
+State 185
+
+   64 asigvar: IVR ASS value EOL •
+
+    $default  reduce using rule 64 (asigvar)
+
+
+State 186
+
+   65 asigvar: IVR ASS intoperation EOL •
+
+    $default  reduce using rule 65 (asigvar)
+
+
+State 187
+
+   66 asigvar: IVR ASS floatoperation EOL •
+
+    $default  reduce using rule 66 (asigvar)
+
+
+State 188
+
+   67 asigvar: IVR ASS stringops EOL •
+
+    $default  reduce using rule 67 (asigvar)
+
+
+State 189
+
+   48 vector_access: IVR COR_A IVR COR_C •
+   53 vector_assign: IVR COR_A IVR COR_C • ASS value EOL
+   54              | IVR COR_A IVR COR_C • ASS intoperation EOL
+   55              | IVR COR_A IVR COR_C • ASS floatoperation EOL
+   56              | IVR COR_A IVR COR_C • ASS stringops EOL
+
+    ASS  shift, and go to state 243
+
+    $default  reduce using rule 48 (vector_access)
+
+
+State 190
+
+   47 vector_access: IVR COR_A INT COR_C •
+   49 vector_assign: IVR COR_A INT COR_C • ASS value EOL
+   50              | IVR COR_A INT COR_C • ASS intoperation EOL
+   51              | IVR COR_A INT COR_C • ASS floatoperation EOL
+   52              | IVR COR_A INT COR_C • ASS stringops EOL
+
+    ASS  shift, and go to state 244
+
+    $default  reduce using rule 47 (vector_access)
+
+
+State 191
+
+   44 initvector: VEC IVR ASS LLA • vector_elements LLC EOL
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_elements  go to state 245
+    vector_access    go to state 64
+    value            go to state 246
+
+
+State 192
+
+  120 vectorError: VEC IVR COR_A STR • COR_C
+
+    COR_C  shift, and go to state 247
+
+
+State 193
+
+   42 decvector: VEC IVR COR_A INT • COR_C
+   43 initvector: VEC IVR COR_A INT • COR_C ASS LLA vector_elements LLC EOL
+
+    COR_C  shift, and go to state 248
+
+
+State 194
+
+  118 vectorError: VEC IVR COR_A COR_C •
+
+    $default  reduce using rule 118 (vectorError)
+
+
+State 195
+
+  159 arguments: IVR COMA • arguments
+
+    IVR  shift, and go to state 137
+
+    $default  reduce using rule 157 (arguments)
+
+    arguments  go to state 249
+
+
+State 196
+
+  167 callfunc: IFU PAA arguments PAC •
+
+    $default  reduce using rule 167 (callfunc)
+
+
+State 197
+
+  155 parameters: decvar •
+  156           | decvar • COMA parameters
+
+    COMA  shift, and go to state 250
+
+    $default  reduce using rule 155 (parameters)
+
+
+State 198
+
+  160 decfunError: FUN IFU PAA parameters • PAC LLA sentences LLC EOL
+  161 decfun: FUN IFU PAA parameters • PAC LLA sentences ret LLC EOL
+
+    PAC  shift, and go to state 251
+
+
+State 199
+
+   48 vector_access: IVR COR_A IVR • COR_C
+
+    COR_C  shift, and go to state 252
+
+
+State 200
+
+   47 vector_access: IVR COR_A INT • COR_C
+
+    COR_C  shift, and go to state 253
+
+
+State 201
+
+  135 conditionalSim: SII PAA condition AND • condition PAC LLA sentences LLC
+  142 condiError: SII PAA condition AND • condition PAC LLA sentencesError LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 254
+
+
+State 202
+
+  134 conditionalSim: SII PAA condition ORR • condition PAC LLA sentences LLC
+  141 condiError: SII PAA condition ORR • condition PAC LLA sentencesError LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 255
+
+
+State 203
+
+  133 conditionalSim: SII PAA condition PAC • LLA sentences LLC
+  140 condiError: SII PAA condition PAC • LLA sentencesError LLC
+
+    LLA  shift, and go to state 256
+
+
+State 204
+
+   41 decvar: VAR IVR •
+
+    $default  reduce using rule 41 (decvar)
+
+
+State 205
+
+  146 loop: LOP PAA decvar EOL • conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL • conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA decvar EOL • conditionLoop EOL IVR PAC LLA sentences LLC EOL
+  151          | LOP PAA decvar EOL • IVR ADC PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar EOL • conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL • conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL
+
+    IVR  shift, and go to state 257
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 146
+    conditionLoop  go to state 258
+
+
+State 206
+
+  125 conditionLoop: value EQU • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 169
+
+
+State 207
+
+  126 conditionLoop: value DIS • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 171
+
+
+State 208
+
+  149 loopError: LOP PAA conditionLoop EOL • IVR ADC PAC LLA sentences LLC EOL
+  150          | LOP PAA conditionLoop EOL • IVR REC PAC LLA sentences LLC EOL
+
+    IVR  shift, and go to state 259
+
+
+State 209
+
+  133 conditionalSim: SII PAA • condition PAC LLA sentences LLC
+  134               | SII PAA • condition ORR condition PAC LLA sentences LLC
+  135               | SII PAA • condition AND condition PAC LLA sentences LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 260
+
+
+State 210
+
+   47 vector_access: IVR • COR_A INT COR_C
+   48              | IVR • COR_A IVR COR_C
+   49 vector_assign: IVR • COR_A INT COR_C ASS value EOL
+   50              | IVR • COR_A INT COR_C ASS intoperation EOL
+   51              | IVR • COR_A INT COR_C ASS floatoperation EOL
+   52              | IVR • COR_A INT COR_C ASS stringops EOL
+   53              | IVR • COR_A IVR COR_C ASS value EOL
+   54              | IVR • COR_A IVR COR_C ASS intoperation EOL
+   55              | IVR • COR_A IVR COR_C ASS floatoperation EOL
+   56              | IVR • COR_A IVR COR_C ASS stringops EOL
+   64 asigvar: IVR • ASS value EOL
+   65        | IVR • ASS intoperation EOL
+   66        | IVR • ASS floatoperation EOL
+   67        | IVR • ASS stringops EOL
+   68        | IVR • ASS vector_access EOL
+   69        | IVR • ASS callfunc
+   70        | IVR • ASS STR EOL
+
+    ASS    shift, and go to state 42
+    COR_A  shift, and go to state 261
+
+
+State 211
+
+   42 decvector: VEC • IVR COR_A INT COR_C
+   43 initvector: VEC • IVR COR_A INT COR_C ASS LLA vector_elements LLC EOL
+   44           | VEC • IVR ASS LLA vector_elements LLC EOL
+
+    IVR  shift, and go to state 262
+
+
+State 212
+
+  109 stringops: STR • ADD STR
+
+    ADD  shift, and go to state 183
+
+
+State 213
+
+   75 intoperation: INT • ADD INT
+   76             | INT • SUB INT
+   77             | INT • MUL INT
+   78             | INT • DIV INT
+   83             | INT • ADD FLO
+   84             | INT • SUB FLO
+   85             | INT • MUL FLO
+   86             | INT • DIV FLO
+   91             | INT • ADD vector_access
+   92             | INT • SUB vector_access
+   93             | INT • MUL vector_access
+   94             | INT • DIV vector_access
+
+    ADD  shift, and go to state 51
+    SUB  shift, and go to state 52
+    MUL  shift, and go to state 53
+    DIV  shift, and go to state 54
+
+
+State 214
+
+   79 intoperation: FLO • ADD INT
+   80             | FLO • SUB INT
+   81             | FLO • MUL INT
+   82             | FLO • DIV INT
+   99 floatoperation: FLO • ADD FLO
+  100               | FLO • SUB FLO
+  105               | FLO • ADD vector_access
+  106               | FLO • SUB vector_access
+  107               | FLO • MUL vector_access
+  108               | FLO • DIV vector_access
+
+    ADD  shift, and go to state 55
+    SUB  shift, and go to state 56
+    MUL  shift, and go to state 57
+    DIV  shift, and go to state 58
+
+
+State 215
+
+  161 decfun: FUN • IFU PAA parameters PAC LLA sentences ret LLC EOL
+
+    IFU  shift, and go to state 263
+
+
+State 216
+
+  146 loop: LOP • PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP • PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+
+    PAA  shift, and go to state 264
+
+
+State 217
+
+   27 sentences: sentences • sentence
+  137 condiComp: conditionalSim SIN LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 265
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 218
+
+   25 sentences: sentence •
+
+    $default  reduce using rule 25 (sentences)
+
+
+State 219
+
+  144 condiCompError: conditionalSim SIN LLA sentencesError • LLC EOL
+
+    LLC  shift, and go to state 267
+
+
+State 220
+
+   31 sentence: decvar • EOL
+
+    EOL  shift, and go to state 68
+
+
+State 221
+
+   32 sentence: decvector • EOL
+
+    EOL  shift, and go to state 69
+
+
+State 222
+
+   33 sentence: initvector • EOL
+
+    EOL  shift, and go to state 70
+
+
+State 223
+
+   34 sentence: vector_access • EOL
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+
+    EOL  shift, and go to state 268
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+
+State 224
+
+   35 sentence: vector_assign • EOL
+
+    EOL  shift, and go to state 76
+
+
+State 225
+
+   37 sentence: initvar •
+
+    $default  reduce using rule 37 (sentence)
+
+
+State 226
+
+   36 sentence: asigvar •
+
+    $default  reduce using rule 36 (sentence)
+
+
+State 227
+
+   28 sentence: intoperation • EOL
+
+    EOL  shift, and go to state 269
+
+
+State 228
+
+   29 sentence: floatoperation • EOL
+
+    EOL  shift, and go to state 270
+
+
+State 229
+
+   30 sentence: stringops • EOL
+
+    EOL  shift, and go to state 271
+
+
+State 230
+
+  136 condiComp: conditionalSim • EOL
+  137          | conditionalSim • SIN LLA sentences LLC EOL
+  138          | conditionalSim • SIN conditionalSim EOL
+  139          | conditionalSim • SIN conditionalSim SIN LLA sentences LLC EOL
+
+    EOL  shift, and go to state 90
+    SIN  shift, and go to state 272
+
+
+State 231
+
+   26 sentences: condiComp •
+
+    $default  reduce using rule 26 (sentences)
+
+
+State 232
+
+   38 sentence: loop •
+
+    $default  reduce using rule 38 (sentence)
+
+
+State 233
+
+   40 sentencesError: decfun •
+
+    $default  reduce using rule 40 (sentencesError)
+
+
+State 234
+
+   39 sentence: callfunc • EOL
+
+    EOL  shift, and go to state 93
+
+
+State 235
+
+  138 condiComp: conditionalSim SIN conditionalSim EOL •
+
+    $default  reduce using rule 138 (condiComp)
+
+
+State 236
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN • LLA sentences LLC EOL
+  145 condiCompError: conditionalSim SIN conditionalSim SIN • LLA sentencesError LLC EOL
+
+    LLA  shift, and go to state 273
+
+
+State 237
+
+   57 initvar: VAR IVR ASS STR EOL •
+
+    $default  reduce using rule 57 (initvar)
+
+
+State 238
+
+   62 initvar: VAR IVR ASS vector_access EOL •
+
+    $default  reduce using rule 62 (initvar)
+
+
+State 239
+
+   61 initvar: VAR IVR ASS value EOL •
+
+    $default  reduce using rule 61 (initvar)
+
+
+State 240
+
+   58 initvar: VAR IVR ASS intoperation EOL •
+
+    $default  reduce using rule 58 (initvar)
+
+
+State 241
+
+   59 initvar: VAR IVR ASS floatoperation EOL •
+
+    $default  reduce using rule 59 (initvar)
+
+
+State 242
+
+   60 initvar: VAR IVR ASS stringops EOL •
+
+    $default  reduce using rule 60 (initvar)
+
+
+State 243
+
+   53 vector_assign: IVR COR_A IVR COR_C ASS • value EOL
+   54              | IVR COR_A IVR COR_C ASS • intoperation EOL
+   55              | IVR COR_A IVR COR_C ASS • floatoperation EOL
+   56              | IVR COR_A IVR COR_C ASS • stringops EOL
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 212
+    INT  shift, and go to state 8
+    FLO  shift, and go to state 9
+
+    vector_access   go to state 274
+    value           go to state 275
+    intoperation    go to state 276
+    floatoperation  go to state 277
+    stringops       go to state 278
+
+
+State 244
+
+   49 vector_assign: IVR COR_A INT COR_C ASS • value EOL
+   50              | IVR COR_A INT COR_C ASS • intoperation EOL
+   51              | IVR COR_A INT COR_C ASS • floatoperation EOL
+   52              | IVR COR_A INT COR_C ASS • stringops EOL
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 212
+    INT  shift, and go to state 8
+    FLO  shift, and go to state 9
+
+    vector_access   go to state 274
+    value           go to state 279
+    intoperation    go to state 280
+    floatoperation  go to state 281
+    stringops       go to state 282
+
+
+State 245
+
+   44 initvector: VEC IVR ASS LLA vector_elements • LLC EOL
+   46 vector_elements: vector_elements • COMA value
+
+    LLC   shift, and go to state 283
+    COMA  shift, and go to state 284
+
+
+State 246
+
+   45 vector_elements: value •
+
+    $default  reduce using rule 45 (vector_elements)
+
+
+State 247
+
+  120 vectorError: VEC IVR COR_A STR COR_C •
+
+    $default  reduce using rule 120 (vectorError)
+
+
+State 248
+
+   42 decvector: VEC IVR COR_A INT COR_C •
+   43 initvector: VEC IVR COR_A INT COR_C • ASS LLA vector_elements LLC EOL
+
+    ASS  shift, and go to state 285
+
+    $default  reduce using rule 42 (decvector)
+
+
+State 249
+
+  159 arguments: IVR COMA arguments •
+
+    $default  reduce using rule 159 (arguments)
+
+
+State 250
+
+  156 parameters: decvar COMA • parameters
+
+    VAR  shift, and go to state 144
+
+    $default  reduce using rule 154 (parameters)
+
+    decvar      go to state 197
+    parameters  go to state 286
+
+
+State 251
+
+  160 decfunError: FUN IFU PAA parameters PAC • LLA sentences LLC EOL
+  161 decfun: FUN IFU PAA parameters PAC • LLA sentences ret LLC EOL
+
+    LLA  shift, and go to state 287
+
+
+State 252
+
+   48 vector_access: IVR COR_A IVR COR_C •
+
+    $default  reduce using rule 48 (vector_access)
+
+
+State 253
+
+   47 vector_access: IVR COR_A INT COR_C •
+
+    $default  reduce using rule 47 (vector_access)
+
+
+State 254
+
+  135 conditionalSim: SII PAA condition AND condition • PAC LLA sentences LLC
+  142 condiError: SII PAA condition AND condition • PAC LLA sentencesError LLC
+
+    PAC  shift, and go to state 288
+
+
+State 255
+
+  134 conditionalSim: SII PAA condition ORR condition • PAC LLA sentences LLC
+  141 condiError: SII PAA condition ORR condition • PAC LLA sentencesError LLC
+
+    PAC  shift, and go to state 289
+
+
+State 256
+
+  133 conditionalSim: SII PAA condition PAC LLA • sentences LLC
+  140 condiError: SII PAA condition PAC LLA • sentencesError LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 290
+    sentence        go to state 218
+    sentencesError  go to state 291
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 257
+
+   47 vector_access: IVR • COR_A INT COR_C
+   48              | IVR • COR_A IVR COR_C
+   73 value: IVR •
+  151 loopError: LOP PAA decvar EOL IVR • ADC PAC LLA sentences LLC EOL
+
+    COR_A  shift, and go to state 140
+    ADC    shift, and go to state 292
+
+    $default  reduce using rule 73 (value)
+
+
+State 258
+
+  146 loop: LOP PAA decvar EOL conditionLoop • EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop • EOL IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA decvar EOL conditionLoop • EOL IVR PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar EOL conditionLoop • EOL IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL conditionLoop • EOL IVR ADC REC LLA sentencesError LLC EOL
+
+    EOL  shift, and go to state 293
+
+
+State 259
+
+  149 loopError: LOP PAA conditionLoop EOL IVR • ADC PAC LLA sentences LLC EOL
+  150          | LOP PAA conditionLoop EOL IVR • REC PAC LLA sentences LLC EOL
+
+    ADC  shift, and go to state 294
+    REC  shift, and go to state 295
+
+
+State 260
+
+  133 conditionalSim: SII PAA condition • PAC LLA sentences LLC
+  134               | SII PAA condition • ORR condition PAC LLA sentences LLC
+  135               | SII PAA condition • AND condition PAC LLA sentences LLC
+
+    AND  shift, and go to state 296
+    ORR  shift, and go to state 297
+    PAC  shift, and go to state 298
+
+
+State 261
+
+   47 vector_access: IVR COR_A • INT COR_C
+   48              | IVR COR_A • IVR COR_C
+   49 vector_assign: IVR COR_A • INT COR_C ASS value EOL
+   50              | IVR COR_A • INT COR_C ASS intoperation EOL
+   51              | IVR COR_A • INT COR_C ASS floatoperation EOL
+   52              | IVR COR_A • INT COR_C ASS stringops EOL
+   53              | IVR COR_A • IVR COR_C ASS value EOL
+   54              | IVR COR_A • IVR COR_C ASS intoperation EOL
+   55              | IVR COR_A • IVR COR_C ASS floatoperation EOL
+   56              | IVR COR_A • IVR COR_C ASS stringops EOL
+
+    IVR  shift, and go to state 102
+    INT  shift, and go to state 103
+
+
+State 262
+
+   42 decvector: VEC IVR • COR_A INT COR_C
+   43 initvector: VEC IVR • COR_A INT COR_C ASS LLA vector_elements LLC EOL
+   44           | VEC IVR • ASS LLA vector_elements LLC EOL
+
+    ASS    shift, and go to state 105
+    COR_A  shift, and go to state 299
+
+
+State 263
+
+  161 decfun: FUN IFU • PAA parameters PAC LLA sentences ret LLC EOL
+
+    PAA  shift, and go to state 300
+
+
+State 264
+
+  146 loop: LOP PAA • decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA • decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+
+    VAR  shift, and go to state 144
+
+    decvar  go to state 301
+
+
+State 265
+
+  137 condiComp: conditionalSim SIN LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 302
+
+
+State 266
+
+   27 sentences: sentences sentence •
+
+    $default  reduce using rule 27 (sentences)
+
+
+State 267
+
+  144 condiCompError: conditionalSim SIN LLA sentencesError LLC • EOL
+
+    EOL  shift, and go to state 303
+
+
+State 268
+
+   34 sentence: vector_access EOL •
+
+    $default  reduce using rule 34 (sentence)
+
+
+State 269
+
+   28 sentence: intoperation EOL •
+
+    $default  reduce using rule 28 (sentence)
+
+
+State 270
+
+   29 sentence: floatoperation EOL •
+
+    $default  reduce using rule 29 (sentence)
+
+
+State 271
+
+   30 sentence: stringops EOL •
+
+    $default  reduce using rule 30 (sentence)
+
+
+State 272
+
+  137 condiComp: conditionalSim SIN • LLA sentences LLC EOL
+  138          | conditionalSim SIN • conditionalSim EOL
+  139          | conditionalSim SIN • conditionalSim SIN LLA sentences LLC EOL
+
+    SII  shift, and go to state 172
+    LLA  shift, and go to state 304
+
+    conditionalSim  go to state 305
+
+
+State 273
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN LLA • sentences LLC EOL
+  145 condiCompError: conditionalSim SIN conditionalSim SIN LLA • sentencesError LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 306
+    sentence        go to state 218
+    sentencesError  go to state 307
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 274
+
+   74 value: vector_access •
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+    $default  reduce using rule 74 (value)
+
+
+State 275
+
+   53 vector_assign: IVR COR_A IVR COR_C ASS value • EOL
+
+    EOL  shift, and go to state 308
+
+
+State 276
+
+   54 vector_assign: IVR COR_A IVR COR_C ASS intoperation • EOL
+
+    EOL  shift, and go to state 309
+
+
+State 277
+
+   55 vector_assign: IVR COR_A IVR COR_C ASS floatoperation • EOL
+
+    EOL  shift, and go to state 310
+
+
+State 278
+
+   56 vector_assign: IVR COR_A IVR COR_C ASS stringops • EOL
+
+    EOL  shift, and go to state 311
+
+
+State 279
+
+   49 vector_assign: IVR COR_A INT COR_C ASS value • EOL
+
+    EOL  shift, and go to state 312
+
+
+State 280
+
+   50 vector_assign: IVR COR_A INT COR_C ASS intoperation • EOL
+
+    EOL  shift, and go to state 313
+
+
+State 281
+
+   51 vector_assign: IVR COR_A INT COR_C ASS floatoperation • EOL
+
+    EOL  shift, and go to state 314
+
+
+State 282
+
+   52 vector_assign: IVR COR_A INT COR_C ASS stringops • EOL
+
+    EOL  shift, and go to state 315
+
+
+State 283
+
+   44 initvector: VEC IVR ASS LLA vector_elements LLC • EOL
+
+    EOL  shift, and go to state 316
+
+
+State 284
+
+   46 vector_elements: vector_elements COMA • value
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 317
+
+
+State 285
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS • LLA vector_elements LLC EOL
+
+    LLA  shift, and go to state 318
+
+
+State 286
+
+  156 parameters: decvar COMA parameters •
+
+    $default  reduce using rule 156 (parameters)
+
+
+State 287
+
+  160 decfunError: FUN IFU PAA parameters PAC LLA • sentences LLC EOL
+  161 decfun: FUN IFU PAA parameters PAC LLA • sentences ret LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 319
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 288
+
+  135 conditionalSim: SII PAA condition AND condition PAC • LLA sentences LLC
+  142 condiError: SII PAA condition AND condition PAC • LLA sentencesError LLC
+
+    LLA  shift, and go to state 320
+
+
+State 289
+
+  134 conditionalSim: SII PAA condition ORR condition PAC • LLA sentences LLC
+  141 condiError: SII PAA condition ORR condition PAC • LLA sentencesError LLC
+
+    LLA  shift, and go to state 321
+
+
+State 290
+
+   27 sentences: sentences • sentence
+  133 conditionalSim: SII PAA condition PAC LLA sentences • LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 322
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 291
+
+  140 condiError: SII PAA condition PAC LLA sentencesError • LLC
+
+    LLC  shift, and go to state 323
+
+
+State 292
+
+  151 loopError: LOP PAA decvar EOL IVR ADC • PAC LLA sentences LLC EOL
+
+    PAC  shift, and go to state 324
+
+
+State 293
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL • IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop EOL • IVR REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL • IVR PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar EOL conditionLoop EOL • IVR ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL conditionLoop EOL • IVR ADC REC LLA sentencesError LLC EOL
+
+    IVR  shift, and go to state 325
+
+
+State 294
+
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC • PAC LLA sentences LLC EOL
+
+    PAC  shift, and go to state 326
+
+
+State 295
+
+  150 loopError: LOP PAA conditionLoop EOL IVR REC • PAC LLA sentences LLC EOL
+
+    PAC  shift, and go to state 327
+
+
+State 296
+
+  135 conditionalSim: SII PAA condition AND • condition PAC LLA sentences LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 328
+
+
+State 297
+
+  134 conditionalSim: SII PAA condition ORR • condition PAC LLA sentences LLC
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 141
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+    NEG  shift, and go to state 12
+
+    vector_access  go to state 64
+    value          go to state 142
+    conditionLoop  go to state 30
+    condition      go to state 329
+
+
+State 298
+
+  133 conditionalSim: SII PAA condition PAC • LLA sentences LLC
+
+    LLA  shift, and go to state 330
+
+
+State 299
+
+   42 decvector: VEC IVR COR_A • INT COR_C
+   43 initvector: VEC IVR COR_A • INT COR_C ASS LLA vector_elements LLC EOL
+
+    INT  shift, and go to state 193
+
+
+State 300
+
+  161 decfun: FUN IFU PAA • parameters PAC LLA sentences ret LLC EOL
+
+    VAR  shift, and go to state 144
+
+    $default  reduce using rule 154 (parameters)
+
+    decvar      go to state 197
+    parameters  go to state 331
+
+
+State 301
+
+  146 loop: LOP PAA decvar • EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar • EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+
+    EOL  shift, and go to state 332
+
+
+State 302
+
+  137 condiComp: conditionalSim SIN LLA sentences LLC EOL •
+
+    $default  reduce using rule 137 (condiComp)
+
+
+State 303
+
+  144 condiCompError: conditionalSim SIN LLA sentencesError LLC EOL •
+
+    $default  reduce using rule 144 (condiCompError)
+
+
+State 304
+
+  137 condiComp: conditionalSim SIN LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 217
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 305
+
+  138 condiComp: conditionalSim SIN conditionalSim • EOL
+  139          | conditionalSim SIN conditionalSim • SIN LLA sentences LLC EOL
+
+    EOL  shift, and go to state 235
+    SIN  shift, and go to state 333
+
+
+State 306
+
+   27 sentences: sentences • sentence
+  139 condiComp: conditionalSim SIN conditionalSim SIN LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 334
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 307
+
+  145 condiCompError: conditionalSim SIN conditionalSim SIN LLA sentencesError • LLC EOL
+
+    LLC  shift, and go to state 335
+
+
+State 308
+
+   53 vector_assign: IVR COR_A IVR COR_C ASS value EOL •
+
+    $default  reduce using rule 53 (vector_assign)
+
+
+State 309
+
+   54 vector_assign: IVR COR_A IVR COR_C ASS intoperation EOL •
+
+    $default  reduce using rule 54 (vector_assign)
+
+
+State 310
+
+   55 vector_assign: IVR COR_A IVR COR_C ASS floatoperation EOL •
+
+    $default  reduce using rule 55 (vector_assign)
+
+
+State 311
+
+   56 vector_assign: IVR COR_A IVR COR_C ASS stringops EOL •
+
+    $default  reduce using rule 56 (vector_assign)
+
+
+State 312
+
+   49 vector_assign: IVR COR_A INT COR_C ASS value EOL •
+
+    $default  reduce using rule 49 (vector_assign)
+
+
+State 313
+
+   50 vector_assign: IVR COR_A INT COR_C ASS intoperation EOL •
+
+    $default  reduce using rule 50 (vector_assign)
+
+
+State 314
+
+   51 vector_assign: IVR COR_A INT COR_C ASS floatoperation EOL •
+
+    $default  reduce using rule 51 (vector_assign)
+
+
+State 315
+
+   52 vector_assign: IVR COR_A INT COR_C ASS stringops EOL •
+
+    $default  reduce using rule 52 (vector_assign)
+
+
+State 316
+
+   44 initvector: VEC IVR ASS LLA vector_elements LLC EOL •
+
+    $default  reduce using rule 44 (initvector)
+
+
+State 317
+
+   46 vector_elements: vector_elements COMA value •
+
+    $default  reduce using rule 46 (vector_elements)
+
+
+State 318
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS LLA • vector_elements LLC EOL
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_elements  go to state 336
+    vector_access    go to state 64
+    value            go to state 246
+
+
+State 319
+
+   27 sentences: sentences • sentence
+  160 decfunError: FUN IFU PAA parameters PAC LLA sentences • LLC EOL
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences • ret LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    RET  shift, and go to state 337
+    LLC  shift, and go to state 338
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    ret             go to state 339
+    callfunc        go to state 234
+
+
+State 320
+
+  135 conditionalSim: SII PAA condition AND condition PAC LLA • sentences LLC
+  142 condiError: SII PAA condition AND condition PAC LLA • sentencesError LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 340
+    sentence        go to state 218
+    sentencesError  go to state 341
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 321
+
+  134 conditionalSim: SII PAA condition ORR condition PAC LLA • sentences LLC
+  141 condiError: SII PAA condition ORR condition PAC LLA • sentencesError LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 342
+    sentence        go to state 218
+    sentencesError  go to state 343
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 322
+
+  133 conditionalSim: SII PAA condition PAC LLA sentences LLC •
+
+    $default  reduce using rule 133 (conditionalSim)
+
+
+State 323
+
+  140 condiError: SII PAA condition PAC LLA sentencesError LLC •
+
+    $default  reduce using rule 140 (condiError)
+
+
+State 324
+
+  151 loopError: LOP PAA decvar EOL IVR ADC PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 344
+
+
+State 325
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR • ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop EOL IVR • REC PAC LLA sentences LLC EOL
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR • PAC LLA sentences LLC EOL
+  152          | LOP PAA decvar EOL conditionLoop EOL IVR • ADC PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL conditionLoop EOL IVR • ADC REC LLA sentencesError LLC EOL
+
+    PAC  shift, and go to state 345
+    ADC  shift, and go to state 346
+    REC  shift, and go to state 347
+
+
+State 326
+
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 348
+
+
+State 327
+
+  150 loopError: LOP PAA conditionLoop EOL IVR REC PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 349
+
+
+State 328
+
+  135 conditionalSim: SII PAA condition AND condition • PAC LLA sentences LLC
+
+    PAC  shift, and go to state 350
+
+
+State 329
+
+  134 conditionalSim: SII PAA condition ORR condition • PAC LLA sentences LLC
+
+    PAC  shift, and go to state 351
+
+
+State 330
+
+  133 conditionalSim: SII PAA condition PAC LLA • sentences LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 290
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 331
+
+  161 decfun: FUN IFU PAA parameters • PAC LLA sentences ret LLC EOL
+
+    PAC  shift, and go to state 352
+
+
+State 332
+
+  146 loop: LOP PAA decvar EOL • conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL • conditionLoop EOL IVR REC PAC LLA sentences LLC EOL
+
+    IVR  shift, and go to state 61
+    INT  shift, and go to state 62
+    FLO  shift, and go to state 63
+
+    vector_access  go to state 64
+    value          go to state 146
+    conditionLoop  go to state 353
+
+
+State 333
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 354
+
+
+State 334
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 355
+
+
+State 335
+
+  145 condiCompError: conditionalSim SIN conditionalSim SIN LLA sentencesError LLC • EOL
+
+    EOL  shift, and go to state 356
+
+
+State 336
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS LLA vector_elements • LLC EOL
+   46 vector_elements: vector_elements • COMA value
+
+    LLC   shift, and go to state 357
+    COMA  shift, and go to state 284
+
+
+State 337
+
+  162 ret: RET • value EOL
+  163    | RET • intoperation EOL
+  164    | RET • floatoperation EOL
+  165    | RET • stringops EOL
+  166    | RET • vector_access EOL
+
+    IVR  shift, and go to state 61
+    STR  shift, and go to state 212
+    INT  shift, and go to state 8
+    FLO  shift, and go to state 9
+
+    vector_access   go to state 358
+    value           go to state 359
+    intoperation    go to state 360
+    floatoperation  go to state 361
+    stringops       go to state 362
+
+
+State 338
+
+  160 decfunError: FUN IFU PAA parameters PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 363
+
+
+State 339
+
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences ret • LLC EOL
+
+    LLC  shift, and go to state 364
+
+
+State 340
+
+   27 sentences: sentences • sentence
+  135 conditionalSim: SII PAA condition AND condition PAC LLA sentences • LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 365
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 341
+
+  142 condiError: SII PAA condition AND condition PAC LLA sentencesError • LLC
+
+    LLC  shift, and go to state 366
+
+
+State 342
+
+   27 sentences: sentences • sentence
+  134 conditionalSim: SII PAA condition ORR condition PAC LLA sentences • LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 367
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 343
+
+  141 condiError: SII PAA condition ORR condition PAC LLA sentencesError • LLC
+
+    LLC  shift, and go to state 368
+
+
+State 344
+
+  151 loopError: LOP PAA decvar EOL IVR ADC PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 369
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 345
+
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 370
+
+
+State 346
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC • PAC LLA sentences LLC EOL
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC • PAC LLA sentencesError LLC EOL
+  153          | LOP PAA decvar EOL conditionLoop EOL IVR ADC • REC LLA sentencesError LLC EOL
+
+    PAC  shift, and go to state 371
+    REC  shift, and go to state 372
+
+
+State 347
+
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC • PAC LLA sentences LLC EOL
+
+    PAC  shift, and go to state 373
+
+
+State 348
+
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 374
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 349
+
+  150 loopError: LOP PAA conditionLoop EOL IVR REC PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 375
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 350
+
+  135 conditionalSim: SII PAA condition AND condition PAC • LLA sentences LLC
+
+    LLA  shift, and go to state 376
+
+
+State 351
+
+  134 conditionalSim: SII PAA condition ORR condition PAC • LLA sentences LLC
+
+    LLA  shift, and go to state 377
+
+
+State 352
+
+  161 decfun: FUN IFU PAA parameters PAC • LLA sentences ret LLC EOL
+
+    LLA  shift, and go to state 378
+
+
+State 353
+
+  146 loop: LOP PAA decvar EOL conditionLoop • EOL IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop • EOL IVR REC PAC LLA sentences LLC EOL
+
+    EOL  shift, and go to state 379
+
+
+State 354
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 306
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 355
+
+  139 condiComp: conditionalSim SIN conditionalSim SIN LLA sentences LLC EOL •
+
+    $default  reduce using rule 139 (condiComp)
+
+
+State 356
+
+  145 condiCompError: conditionalSim SIN conditionalSim SIN LLA sentencesError LLC EOL •
+
+    $default  reduce using rule 145 (condiCompError)
+
+
+State 357
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS LLA vector_elements LLC • EOL
+
+    EOL  shift, and go to state 380
+
+
+State 358
+
+   74 value: vector_access •
+   87 intoperation: vector_access • ADD INT
+   88             | vector_access • SUB INT
+   89             | vector_access • MUL INT
+   90             | vector_access • DIV INT
+   95             | vector_access • ADD vector_access
+   96             | vector_access • SUB vector_access
+   97             | vector_access • MUL vector_access
+   98             | vector_access • DIV vector_access
+  101 floatoperation: vector_access • ADD FLO
+  102               | vector_access • SUB FLO
+  103               | vector_access • MUL FLO
+  104               | vector_access • DIV FLO
+  166 ret: RET vector_access • EOL
+
+    EOL  shift, and go to state 381
+    ADD  shift, and go to state 72
+    SUB  shift, and go to state 73
+    MUL  shift, and go to state 74
+    DIV  shift, and go to state 75
+
+    EOL  [reduce using rule 74 (value)]
+
+
+State 359
+
+  162 ret: RET value • EOL
+
+    EOL  shift, and go to state 382
+
+
+State 360
+
+  163 ret: RET intoperation • EOL
+
+    EOL  shift, and go to state 383
+
+
+State 361
+
+  164 ret: RET floatoperation • EOL
+
+    EOL  shift, and go to state 384
+
+
+State 362
+
+  165 ret: RET stringops • EOL
+
+    EOL  shift, and go to state 385
+
+
+State 363
+
+  160 decfunError: FUN IFU PAA parameters PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 160 (decfunError)
+
+
+State 364
+
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences ret LLC • EOL
+
+    EOL  shift, and go to state 386
+
+
+State 365
+
+  135 conditionalSim: SII PAA condition AND condition PAC LLA sentences LLC •
+
+    $default  reduce using rule 135 (conditionalSim)
+
+
+State 366
+
+  142 condiError: SII PAA condition AND condition PAC LLA sentencesError LLC •
+
+    $default  reduce using rule 142 (condiError)
+
+
+State 367
+
+  134 conditionalSim: SII PAA condition ORR condition PAC LLA sentences LLC •
+
+    $default  reduce using rule 134 (conditionalSim)
+
+
+State 368
+
+  141 condiError: SII PAA condition ORR condition PAC LLA sentencesError LLC •
+
+    $default  reduce using rule 141 (condiError)
+
+
+State 369
+
+   27 sentences: sentences • sentence
+  151 loopError: LOP PAA decvar EOL IVR ADC PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 387
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 370
+
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 388
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 371
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC • LLA sentences LLC EOL
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC • LLA sentencesError LLC EOL
+
+    LLA  shift, and go to state 389
+
+
+State 372
+
+  153 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC REC • LLA sentencesError LLC EOL
+
+    LLA  shift, and go to state 390
+
+
+State 373
+
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 391
+
+
+State 374
+
+   27 sentences: sentences • sentence
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 392
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 375
+
+   27 sentences: sentences • sentence
+  150 loopError: LOP PAA conditionLoop EOL IVR REC PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 393
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 376
+
+  135 conditionalSim: SII PAA condition AND condition PAC LLA • sentences LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 340
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 377
+
+  134 conditionalSim: SII PAA condition ORR condition PAC LLA • sentences LLC
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 342
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 378
+
+  161 decfun: FUN IFU PAA parameters PAC LLA • sentences ret LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 394
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 379
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL • IVR ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop EOL • IVR REC PAC LLA sentences LLC EOL
+
+    IVR  shift, and go to state 395
+
+
+State 380
+
+   43 initvector: VEC IVR COR_A INT COR_C ASS LLA vector_elements LLC EOL •
+
+    $default  reduce using rule 43 (initvector)
+
+
+State 381
+
+  166 ret: RET vector_access EOL •
+
+    $default  reduce using rule 166 (ret)
+
+
+State 382
+
+  162 ret: RET value EOL •
+
+    $default  reduce using rule 162 (ret)
+
+
+State 383
+
+  163 ret: RET intoperation EOL •
+
+    $default  reduce using rule 163 (ret)
+
+
+State 384
+
+  164 ret: RET floatoperation EOL •
+
+    $default  reduce using rule 164 (ret)
+
+
+State 385
+
+  165 ret: RET stringops EOL •
+
+    $default  reduce using rule 165 (ret)
+
+
+State 386
+
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences ret LLC EOL •
+
+    $default  reduce using rule 161 (decfun)
+
+
+State 387
+
+  151 loopError: LOP PAA decvar EOL IVR ADC PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 396
+
+
+State 388
+
+   27 sentences: sentences • sentence
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 397
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 389
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA • sentences LLC EOL
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA • sentencesError LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    FUN  shift, and go to state 215
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 398
+    sentence        go to state 218
+    sentencesError  go to state 399
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    decfun          go to state 233
+    callfunc        go to state 234
+
+
+State 390
+
+  153 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC REC LLA • sentencesError LLC EOL
+
+    FUN  shift, and go to state 215
+
+    sentencesError  go to state 400
+    decfun          go to state 233
+
+
+State 391
+
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 401
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 392
+
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 402
+
+
+State 393
+
+  150 loopError: LOP PAA conditionLoop EOL IVR REC PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 403
+
+
+State 394
+
+   27 sentences: sentences • sentence
+  161 decfun: FUN IFU PAA parameters PAC LLA sentences • ret LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    RET  shift, and go to state 337
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    ret             go to state 339
+    callfunc        go to state 234
+
+
+State 395
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR • ADC PAC LLA sentences LLC EOL
+  147     | LOP PAA decvar EOL conditionLoop EOL IVR • REC PAC LLA sentences LLC EOL
+
+    ADC  shift, and go to state 404
+    REC  shift, and go to state 347
+
+
+State 396
+
+  151 loopError: LOP PAA decvar EOL IVR ADC PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 151 (loopError)
+
+
+State 397
+
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 405
+
+
+State 398
+
+   27 sentences: sentences • sentence
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 406
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 399
+
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError • LLC EOL
+
+    LLC  shift, and go to state 407
+
+
+State 400
+
+  153 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError • LLC EOL
+
+    LLC  shift, and go to state 408
+
+
+State 401
+
+   27 sentences: sentences • sentence
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences • LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    LLC  shift, and go to state 409
+    LOP  shift, and go to state 216
+
+    sentence        go to state 266
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    loop            go to state 232
+    callfunc        go to state 234
+
+
+State 402
+
+  149 loopError: LOP PAA conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 149 (loopError)
+
+
+State 403
+
+  150 loopError: LOP PAA conditionLoop EOL IVR REC PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 150 (loopError)
+
+
+State 404
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC • PAC LLA sentences LLC EOL
+
+    PAC  shift, and go to state 410
+
+
+State 405
+
+  148 loopError: LOP PAA decvar EOL conditionLoop EOL IVR PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 148 (loopError)
+
+
+State 406
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 411
+
+
+State 407
+
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC • EOL
+
+    EOL  shift, and go to state 412
+
+
+State 408
+
+  153 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC • EOL
+
+    EOL  shift, and go to state 413
+
+
+State 409
+
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC • EOL
+
+    EOL  shift, and go to state 414
+
+
+State 410
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC • LLA sentences LLC EOL
+
+    LLA  shift, and go to state 415
+
+
+State 411
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 146 (loop)
+
+
+State 412
+
+  152 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA sentencesError LLC EOL •
+
+    $default  reduce using rule 152 (loopError)
+
+
+State 413
+
+  153 loopError: LOP PAA decvar EOL conditionLoop EOL IVR ADC REC LLA sentencesError LLC EOL •
+
+    $default  reduce using rule 153 (loopError)
+
+
+State 414
+
+  147 loop: LOP PAA decvar EOL conditionLoop EOL IVR REC PAC LLA sentences LLC EOL •
+
+    $default  reduce using rule 147 (loop)
+
+
+State 415
+
+  146 loop: LOP PAA decvar EOL conditionLoop EOL IVR ADC PAC LLA • sentences LLC EOL
+
+    VAR  shift, and go to state 4
+    IVR  shift, and go to state 210
+    VEC  shift, and go to state 211
+    STR  shift, and go to state 212
+    INT  shift, and go to state 213
+    FLO  shift, and go to state 214
+    IFU  shift, and go to state 10
+    SII  shift, and go to state 172
+    LOP  shift, and go to state 216
+
+    sentences       go to state 398
+    sentence        go to state 218
+    decvar          go to state 220
+    decvector       go to state 221
+    initvector      go to state 222
+    vector_access   go to state 223
+    vector_assign   go to state 224
+    initvar         go to state 225
+    asigvar         go to state 226
+    intoperation    go to state 227
+    floatoperation  go to state 228
+    stringops       go to state 229
+    conditionalSim  go to state 230
+    condiComp       go to state 231
+    loop            go to state 232
+    callfunc        go to state 234
